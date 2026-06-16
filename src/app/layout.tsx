@@ -3,8 +3,9 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp';
+import WelcomePopup from '@/components/WelcomePopup';
 import { SiteContentProvider } from '@/lib/siteContent';
-import { defaultContent, deepMerge, mapDbDoctor, mapDbService, mapDbBlogPost } from '@/lib/siteContentShared';
+import { defaultContent, deepMerge, mapDbDoctor, mapDbService, mapDbBlogPost, defaultPopupData } from '@/lib/siteContentShared';
 import { supabase } from '@/lib/supabase';
 import { doctors as defaultDoctors, services as defaultServices, blogPosts as defaultBlogPosts } from '@/lib/data';
 
@@ -109,16 +110,47 @@ async function getBlogPosts() {
   return defaultBlogPosts;
 }
 
+async function getPopupData() {
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!supabaseUrl || !supabaseAnonKey) {
+      return defaultPopupData;
+    }
+    const { data, error } = await supabase
+      .from('welcome_popup')
+      .select('*')
+      .eq('id', 1)
+      .maybeSingle();
+
+    if (error) {
+      console.warn('Failed to fetch popup data, using defaults:', error.message);
+      return defaultPopupData;
+    }
+    if (data) {
+      return {
+        image_url: data.image_url || '',
+        is_active: !!data.is_active,
+        expires_at: data.expires_at || '',
+      };
+    }
+  } catch (err) {
+    console.warn('Failed to fetch popup data, using defaults:', err);
+  }
+  return defaultPopupData;
+}
+
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [content, doctors, services, blogPosts] = await Promise.all([
+  const [content, doctors, services, blogPosts, popupData] = await Promise.all([
     getSiteContent(),
     getDoctors(),
     getServices(),
     getBlogPosts(),
+    getPopupData(),
   ]);
 
   return (
@@ -137,11 +169,13 @@ export default async function RootLayout({
           initialDoctors={doctors}
           initialServices={services}
           initialBlogPosts={blogPosts}
+          initialPopupData={popupData}
         >
           <Header />
           <main>{children}</main>
           <Footer />
           <FloatingWhatsApp />
+          <WelcomePopup />
         </SiteContentProvider>
       </body>
     </html>

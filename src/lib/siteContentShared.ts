@@ -342,3 +342,15 @@ export function deepMerge<T extends object>(defaults: T, overrides: Partial<T>):
   }
   return result;
 }
+
+export interface WelcomePopupData {
+  image_url: string;
+  is_active: boolean;
+  expires_at: string;
+}
+
+export const defaultPopupData: WelcomePopupData = {
+  image_url: '',
+  is_active: false,
+  expires_at: '',
+};

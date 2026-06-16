@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {
   LayoutDashboard, Users, Briefcase, BookOpen, Calendar,
-  LogOut, Menu, X, ChevronRight, FileText, MessageSquare
+  LogOut, Menu, X, ChevronRight, FileText, MessageSquare, Megaphone
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -18,6 +18,7 @@ const navItems = [
   { href: '/admin/blog', label: 'Bloq', icon: BookOpen },
   { href: '/admin/reviews', label: 'Rəylər', icon: MessageSquare },
   { href: '/admin/appointments', label: 'Qeydiyyatlar', icon: Calendar },
+  { href: '/admin/popup', label: 'Qarşılama Ekranı', icon: Megaphone },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

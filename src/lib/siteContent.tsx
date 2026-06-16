@@ -14,6 +14,8 @@ import {
   mapServiceToDb,
   mapDbBlogPost,
   mapBlogPostToDb,
+  WelcomePopupData,
+  defaultPopupData,
 } from './siteContentShared';
 
 // Export everything from siteContentShared so client components can import them from siteContent
@@ -28,6 +30,7 @@ const SiteContentContext = createContext<{
   doctors: Doctor[];
   services: Service[];
   blogPosts: BlogPost[];
+  popupData: WelcomePopupData;
 
   saveDoctor: (doctor: Doctor) => Promise<void>;
   deleteDoctor: (id: string) => Promise<void>;
@@ -35,6 +38,7 @@ const SiteContentContext = createContext<{
   deleteService: (id: string) => Promise<void>;
   saveBlogPost: (post: BlogPost) => Promise<void>;
   deleteBlogPost: (id: string) => Promise<void>;
+  savePopup: (data: WelcomePopupData) => Promise<void>;
 }>({
   content: defaultContent,
   saveContent: async () => {},
@@ -44,6 +48,7 @@ const SiteContentContext = createContext<{
   doctors: [],
   services: [],
   blogPosts: [],
+  popupData: defaultPopupData,
 
   saveDoctor: async () => {},
   deleteDoctor: async () => {},
@@ -51,6 +56,7 @@ const SiteContentContext = createContext<{
   deleteService: async () => {},
   saveBlogPost: async () => {},
   deleteBlogPost: async () => {},
+  savePopup: async () => {},
 });
 
 export function useSiteContent() {
@@ -67,17 +73,20 @@ export function SiteContentProvider({
   initialDoctors,
   initialServices,
   initialBlogPosts,
+  initialPopupData,
 }: {
   children: React.ReactNode;
   initialContent: SiteContent;
   initialDoctors?: Doctor[];
   initialServices?: Service[];
   initialBlogPosts?: BlogPost[];
+  initialPopupData?: WelcomePopupData;
 }) {
   const [content, setContent] = useState<SiteContent>(initialContent || defaultContent);
   const [doctors, setDoctors] = useState<Doctor[]>(initialDoctors || defaultDoctors);
   const [services, setServices] = useState<Service[]>(initialServices || defaultServices);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>(initialBlogPosts || defaultBlogPosts);
+  const [popupData, setPopupData] = useState<WelcomePopupData>(initialPopupData || defaultPopupData);
   const [loaded, setLoaded] = useState(true);
 
   // Sync client-side state if initial values change (from SSR)
@@ -97,6 +106,10 @@ export function SiteContentProvider({
     if (initialBlogPosts) setBlogPosts(initialBlogPosts);
   }, [initialBlogPosts]);
 
+  useEffect(() => {
+    if (initialPopupData) setPopupData(initialPopupData);
+  }, [initialPopupData]);
+
   const saveContent = useCallback(async (updated: SiteContent) => {
     setContent(updated);
     try {
@@ -108,6 +121,26 @@ export function SiteContentProvider({
       }
     } catch (err) {
       console.error('Failed to save content to Supabase:', err);
+    }
+  }, []);
+
+  const savePopup = useCallback(async (data: WelcomePopupData) => {
+    setPopupData(data);
+    try {
+      const { error } = await supabase
+        .from('welcome_popup')
+        .upsert({
+          id: 1,
+          image_url: data.image_url,
+          is_active: data.is_active,
+          expires_at: data.expires_at,
+          updated_at: new Date().toISOString()
+        });
+      if (error) {
+        console.error('Failed to save popup data to Supabase:', error.message);
+      }
+    } catch (err) {
+      console.error('Failed to save popup data to Supabase:', err);
     }
   }, []);
 
@@ -279,12 +312,14 @@ export function SiteContentProvider({
         doctors,
         services,
         blogPosts,
+        popupData,
         saveDoctor,
         deleteDoctor,
         saveService,
         deleteService,
         saveBlogPost,
         deleteBlogPost,
+        savePopup,
       }}
     >
       {children}

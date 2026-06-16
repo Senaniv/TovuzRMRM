@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { useSiteContent } from '@/lib/siteContent';
 import { BlogPost } from '@/lib/types';
+import { uploadImage } from '@/lib/supabase';
 
 export default function AdminBlog() {
   const { blogPosts: list, saveBlogPost, deleteBlogPost } = useSiteContent();
@@ -17,10 +18,11 @@ export default function AdminBlog() {
   const [editing, setEditing] = useState<BlogPost | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [form, setForm] = useState<Partial<BlogPost>>({});
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ title: '', slug: '', excerpt: '', content: '', author: '', category: '', publishedAt: new Date().toISOString().split('T')[0] });
+    setForm({ title: '', slug: '', excerpt: '', content: '', author: '', category: '', publishedAt: new Date().toISOString().split('T')[0], coverImage: '' });
     setModalOpen(true);
   };
 
@@ -132,6 +134,36 @@ export default function AdminBlog() {
                 />
               </div>
             ))}
+            {/* Image Uploader */}
+            <div>
+              <Label className="text-xs font-semibold text-gray-600 mb-1.5 block">Qapaq Şəkli (Cover Image)</Label>
+              {form.coverImage && (
+                <div className="mb-3 relative w-32 h-20 rounded-xl overflow-hidden border border-gray-100 bg-gray-50 flex items-center justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={form.coverImage} alt="Cover Preview" className="object-cover w-full h-full" />
+                </div>
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  setIsUploadingImage(true);
+                  try {
+                    const url = await uploadImage(file, 'blogs');
+                    setForm(p => ({ ...p, coverImage: url }));
+                  } catch (err: any) {
+                    alert(err.message || 'Şəkil yüklənərkən xəta baş verdi');
+                  } finally {
+                    setIsUploadingImage(false);
+                  }
+                }}
+                disabled={isUploadingImage}
+                className="rounded-xl border-gray-200 text-sm cursor-pointer"
+              />
+              {isUploadingImage && <p className="text-xs text-[#76c122] mt-1">Şəkil yüklənir...</p>}
+            </div>
             <div>
               <Label className="text-xs font-semibold text-gray-600 mb-1.5 block">Xülasə</Label>
               <Textarea
@@ -155,8 +187,8 @@ export default function AdminBlog() {
           </div>
           <div className="flex gap-3 mt-6">
             <Button variant="outline" onClick={() => setModalOpen(false)} className="flex-1 rounded-xl">Ləğv et</Button>
-            <Button onClick={handleSave} disabled={!form.title} className="flex-1 text-white rounded-xl" style={{ background: 'linear-gradient(135deg, #76c122, #5fa010)' }}>
-              <Check className="w-4 h-4 mr-2" /> Saxla
+            <Button onClick={handleSave} disabled={!form.title || isUploadingImage} className="flex-1 text-white rounded-xl" style={{ background: 'linear-gradient(135deg, #76c122, #5fa010)' }}>
+              {isUploadingImage ? 'Yüklənir...' : <><Check className="w-4 h-4 mr-2" /> Saxla</>}
             </Button>
           </div>
         </DialogContent>

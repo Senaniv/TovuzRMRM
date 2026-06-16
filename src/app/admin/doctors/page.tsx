@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useSiteContent } from '@/lib/siteContent';
 import { Doctor } from '@/lib/types';
+import { uploadImage } from '@/lib/supabase';
 
 export default function AdminDoctors() {
   const { doctors: list, saveDoctor, deleteDoctor } = useSiteContent();
@@ -17,6 +18,7 @@ export default function AdminDoctors() {
   const [editing, setEditing] = useState<Doctor | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [form, setForm] = useState<Partial<Doctor>>({});
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const openCreate = () => {
     setEditing(null);
@@ -121,7 +123,6 @@ export default function AdminDoctors() {
               { id: 'title', label: 'Vəzifə', placeholder: 'Uzman Nevroloq' },
               { id: 'specialty', label: 'İxtisas', placeholder: 'Nevrologiya, EEQ' },
               { id: 'experience', label: 'Təcrübə', placeholder: '10 il' },
-              { id: 'image', label: 'Şəkil URL', placeholder: '/doctor-1.png' },
             ].map(field => (
               <div key={field.id}>
                 <Label className="text-xs font-semibold text-gray-600 mb-1.5 block">{field.label}</Label>
@@ -133,6 +134,36 @@ export default function AdminDoctors() {
                 />
               </div>
             ))}
+            {/* Image Uploader */}
+            <div>
+              <Label className="text-xs font-semibold text-gray-600 mb-1.5 block">Şəkil</Label>
+              {form.image && (
+                <div className="mb-3 relative w-20 h-20 rounded-xl overflow-hidden border border-gray-100 bg-gray-50 flex items-center justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={form.image} alt="Doctor Preview" className="object-cover w-full h-full" />
+                </div>
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  setIsUploadingImage(true);
+                  try {
+                    const url = await uploadImage(file, 'doctors');
+                    setForm(f => ({ ...f, image: url }));
+                  } catch (err: any) {
+                    alert(err.message || 'Şəkil yüklənərkən xəta baş verdi');
+                  } finally {
+                    setIsUploadingImage(false);
+                  }
+                }}
+                disabled={isUploadingImage}
+                className="rounded-xl border-gray-200 text-sm cursor-pointer"
+              />
+              {isUploadingImage && <p className="text-xs text-[#76c122] mt-1">Şəkil yüklənir...</p>}
+            </div>
             <div>
               <Label className="text-xs font-semibold text-gray-600 mb-1.5 block">Bio</Label>
               <Textarea
@@ -148,11 +179,11 @@ export default function AdminDoctors() {
             <Button variant="outline" onClick={() => setModalOpen(false)} className="flex-1 rounded-xl">Ləğv et</Button>
             <Button
               onClick={handleSave}
-              disabled={!form.name}
+              disabled={!form.name || isUploadingImage}
               className="flex-1 text-white rounded-xl"
               style={{ background: 'linear-gradient(135deg, #76c122, #5fa010)' }}
             >
-              <Check className="w-4 h-4 mr-2" /> Saxla
+              {isUploadingImage ? 'Yüklənir...' : <><Check className="w-4 h-4 mr-2" /> Saxla</>}
             </Button>
           </div>
         </DialogContent>
