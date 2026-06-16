@@ -67,19 +67,19 @@ export default function AboutSection() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
                   className={`rounded-2xl p-7 text-center ${
-                    i % 2 === 0
+                    i === 0 || i === 3
                       ? 'text-white'
                       : 'bg-white border-2 border-green-100'
                   }`}
-                  style={i % 2 === 0 ? { background: 'linear-gradient(135deg, #76c122, #3f7215)' } : {}}
+                  style={i === 0 || i === 3 ? { background: 'linear-gradient(135deg, #76c122, #3f7215)' } : {}}
                 >
                   <p
-                    className={`text-4xl font-black mb-2 ${i % 2 === 0 ? 'text-white' : 'text-gradient'}`}
+                    className={`text-4xl font-black mb-2 ${i === 0 || i === 3 ? 'text-white' : 'text-gradient'}`}
                     style={{ fontFamily: 'Raleway, sans-serif' }}
                   >
                     {stat.value}
                   </p>
-                  <p className={`text-sm font-medium ${i % 2 === 0 ? 'text-white/80' : 'text-gray-600'}`}>
+                  <p className={`text-sm font-medium ${i === 0 || i === 3 ? 'text-white/80' : 'text-gray-600'}`}>
                     {stat.label}
                   </p>
                 </motion.div>
