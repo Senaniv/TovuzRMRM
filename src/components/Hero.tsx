@@ -93,7 +93,7 @@ export default function Hero() {
                 transition={{ duration: 0.5, delay: 0.4 }}
                 className="flex flex-wrap items-center gap-6 pt-4 border-t border-gray-100"
               >
-                <div className="flex items-center gap-3">
+                <a href="#doctors" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                   <div className="flex -space-x-2.5">
                     {['/doctor-1.png', '/doctor-2.png', '/doctor-3.png'].map((src, i) => (
                       <div key={i} className="w-9 h-9 rounded-full border-2 border-white overflow-hidden bg-gray-100 shadow-sm">
@@ -105,11 +105,11 @@ export default function Hero() {
                     <p className="text-sm font-bold text-gray-900">{h.stat1Value} {h.stat1Label}</p>
                     <p className="text-xs text-gray-500">Müasir reabilitasiya komandası</p>
                   </div>
-                </div>
+                </a>
 
                 <div className="h-8 w-px bg-gray-200 hidden sm:block" />
 
-                <div className="flex items-center gap-2">
+                <a href="#reviews" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                   <div className="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center">
                     <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
                   </div>
@@ -117,7 +117,7 @@ export default function Hero() {
                     <p className="text-sm font-bold text-gray-900">{h.stat2Value}</p>
                     <p className="text-xs text-gray-500">{h.stat2Label}</p>
                   </div>
-                </div>
+                </a>
               </motion.div>
             </div>
 

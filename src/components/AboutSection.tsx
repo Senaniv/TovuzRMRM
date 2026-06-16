@@ -48,27 +48,7 @@ export default function AboutSection() {
               {a.paragraph2}
             </p>
 
-            {/* Feature grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {features.map((feat, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="flex items-start gap-3 p-4 bg-green-50 rounded-xl border border-green-100"
-                >
-                  <div className="w-9 h-9 bg-white rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <feat.icon className="w-4 h-4 text-[#76c122]" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-gray-900">{feat.title}</p>
-                    <p className="text-xs text-gray-600 mt-0.5">{feat.text}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            {/* Feature grid removed from here */}
           </motion.div>
 
           {/* Right — stats */}
@@ -106,28 +86,30 @@ export default function AboutSection() {
               ))}
             </div>
 
-            {/* Quote card */}
+            {/* Quote card removed */}
+          </motion.div>
+        </div>
+
+        {/* Feature cards aligned side-by-side below the main grid */}
+        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {features.map((feat, i) => (
             <motion.div
+              key={i}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="mt-5 p-6 bg-gray-900 rounded-2xl"
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="flex items-start gap-3.5 p-5 bg-green-50 rounded-2xl border border-green-100 shadow-sm"
             >
-              <p className="text-white/90 text-sm italic leading-relaxed mb-4">
-                "{a.quote}"
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-[#76c122] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                  {a.quoteAuthor.charAt(0)}
-                </div>
-                <div>
-                  <p className="text-white text-sm font-semibold">{a.quoteAuthor}</p>
-                  <p className="text-white/50 text-xs">{a.quoteSubtitle}</p>
-                </div>
+              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                <feat.icon className="w-5 h-5 text-[#76c122]" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-gray-900 leading-snug">{feat.title}</p>
+                <p className="text-xs text-gray-600 mt-1 leading-normal">{feat.text}</p>
               </div>
             </motion.div>
-          </motion.div>
+          ))}
         </div>
       </div>
     </section>
