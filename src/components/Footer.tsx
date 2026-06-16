@@ -225,7 +225,15 @@ export default function Footer() {
             © {new Date().getFullYear()} {f.copyright}
           </p>
           <p className="text-xs text-gray-600 flex items-center gap-1">
-            Hazırlanmışdır <Heart className="w-3 h-3 text-red-500 fill-red-500" />
+            <a
+              href="https://www.instagram.com/pixel_digital_services?igsh=MTB1b25kZWQ4YWFrZQ=="
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-[#76c122] transition-colors duration-200 font-medium"
+            >
+              Pixel Digital Services
+            </a>
+            {' '}tərəfindən hazırlanmışdır <Heart className="w-3 h-3 text-red-500 fill-red-500 ml-1" />
           </p>
         </div>
       </div>
