@@ -1,260 +1,101 @@
-// ─────────────────────────────────────────────────────────────
-//  Site Content — single source of truth for all editable text
-//  Admin edits → saved to Supabase → components re-render
-// ─────────────────────────────────────────────────────────────
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from './supabase';
+import { Doctor, Service, BlogPost } from './types';
+import { doctors as defaultDoctors, services as defaultServices, blogPosts as defaultBlogPosts } from './data';
+import {
+  Review,
+  SiteContent,
+  defaultContent,
+  mapDbDoctor,
+  mapDoctorToDb,
+  mapDbService,
+  mapServiceToDb,
+  mapDbBlogPost,
+  mapBlogPostToDb,
+} from './siteContentShared';
 
-export interface Review {
-  id: string;
-  name: string;
-  rating: number;
-  comment: string;
-  avatar: string;
-}
-
-export interface SiteContent {
-  // ── Header ──────────────────────────────────────────────────
-  header: {
-    centerName: string;       // "Regional Müalicə və Reabilitasiya Mərkəzi"
-    phone: string;            // "099 301 44 44"
-    address: string;          // top-bar address
-    email: string;            // top-bar email
-  };
-
-  // ── Hero Section ────────────────────────────────────────────
-  hero: {
-    badge: string;            // "⭐ Tovuz Şəhərinin №1 Reabilitasiya Mərkəzi"
-    heading1: string;         // "Sağlamlığınız üçün"
-    heading2: string;         // "ən yaxşı müalicə"
-    heading3: string;         // "burada başlayır"
-    subtext: string;          // paragraph under heading
-    ctaPrimary: string;       // "Qeydiyyat Et"
-    ctaSecondary: string;     // "Xidmətlərə Bax"
-    stat1Value: string;       // "+15"
-    stat1Label: string;       // "Peşəkar Həkim"
-    stat2Value: string;       // "4.9 / 5.0"
-    stat2Label: string;       // "500+ pasiyent rəyi"
-    floatingCard: string;     // floating review card text
-    floatingBadge1: string;   // "Lisenziyalı"
-    floatingBadge2: string;   // "Səhiyyə Nazirliyi"
-  };
-
-  // ── About Section ───────────────────────────────────────────
-  about: {
-    badge: string;
-    heading1: string;         // "Tovuzun ən müasir"
-    headingGradient: string;  // "reabilitasiya mərkəzi"
-    paragraph1: string;
-    paragraph2: string;
-    stat1Value: string;  stat1Label: string;
-    stat2Value: string;  stat2Label: string;
-    stat3Value: string;  stat3Label: string;
-    stat4Value: string;  stat4Label: string;
-    quote: string;
-    quoteAuthor: string;
-    quoteSubtitle: string;
-    feat1Title: string;  feat1Text: string;
-    feat2Title: string;  feat2Text: string;
-    feat3Title: string;  feat3Text: string;
-    feat4Title: string;  feat4Text: string;
-  };
-
-  // ── Services Section ─────────────────────────────────────────
-  services: {
-    badge: string;
-    heading1: string;         // "Biz Nə"
-    headingGradient: string;  // "Təklif Edirik?"
-    subtext: string;
-  };
-
-  // ── Doctors Section ──────────────────────────────────────────
-  doctors: {
-    badge: string;
-    heading1: string;
-    headingGradient: string;
-    subtext: string;
-  };
-
-  // ── Reviews Section ──────────────────────────────────────────
-  reviewsSection: {
-    badge: string;
-    heading1: string;
-    headingGradient: string;
-    subtext: string;
-    list: Review[];
-  };
-
-  // ── Blog Section ─────────────────────────────────────────────
-  blog: {
-    badge: string;
-    heading1: string;
-    headingGradient: string;
-    subtext: string;
-    ctaButton: string;
-  };
-
-  // ── Footer / Contact ─────────────────────────────────────────
-  footer: {
-    slogan: string;         // "Sağlamlıq artıq uzaqda deyil!"
-    description: string;
-    phone: string;
-    address: string;
-    email: string;
-    workdaysHours: string;  // "09:00 – 17:00"
-    saturdayHours: string;  // "09:00 – 15:00"
-    copyright: string;
-  };
-}
-
-// ── DEFAULT VALUES ────────────────────────────────────────────
-export const defaultContent: SiteContent = {
-  header: {
-    centerName: 'Regional Müalicə və Reabilitasiya Mərkəzi',
-    phone: '099 301 44 44',
-    address: 'H.Əliyev pros., 298, Tovuz',
-    email: 'info@reabilitasiya.az',
-  },
-  hero: {
-    badge: '⭐ Tovuz Şəhərinin №1 Reabilitasiya Mərkəzi',
-    heading1: 'Sağlamlığınız üçün',
-    heading2: 'ən yaxşı müalicə',
-    heading3: 'burada başlayır',
-    subtext:
-      'Regional Müalicə və Reabilitasiya Mərkəzimiz müasir tibb texnologiyaları, ixtisaslı mütəxəssislər və fərdi yanaşma ilə hər bir xəstənin tam sağalmasına dəstək verir.',
-    ctaPrimary: 'Qəbula yazıl',
-    ctaSecondary: 'Xidmətlərə Bax',
-    stat1Value: '+15',
-    stat1Label: 'Peşəkar Həkim',
-    stat2Value: '4.9 / 5.0',
-    stat2Label: '500+ pasiyent rəyi',
-    floatingCard: 'Həkimlərimiz pasiyentlər tərəfindən yüksək qiymətləndirilir',
-    floatingBadge1: 'Lisenziyalı',
-    floatingBadge2: 'Səhiyyə Nazirliyi',
-  },
-  about: {
-    badge: 'Haqqımızda',
-    heading1: 'Tovuzun ən müasir',
-    headingGradient: 'reabilitasiya mərkəzi',
-    paragraph1:
-      'Regional Müalicə və Reabilitasiya Mərkəzi Tovuz şəhərinin əhalisinə ən yüksək keyfiyyətli tibbi xidmətlər göstərmək məqsədi ilə fəaliyyət göstərir.',
-    paragraph2:
-      'Müasir avadanlıq, ixtisaslı həkimlər və fərdi müalicə proqramları ilə hər bir xəstənin sağalması üçün əlimizdən gələni edirik.',
-    stat1Value: '+3000', stat1Label: 'Müalicə olunan xəstə',
-    stat2Value: '+15',   stat2Label: 'İxtisaslı həkim',
-    stat3Value: '10+',   stat3Label: 'İllik təcrübə',
-    stat4Value: '4.9',   stat4Label: 'Ortalama reytinq',
-    quote:
-      'Sağlamlığınız bizim əsas prioritetimizdir. Hər bir xəstəyə fərdi, hərtərəfli tibbi yanaşma ilə ən yaxşı nəticəyə nail olmağa çalışırıq.',
-    quoteAuthor: 'Baş Həkim',
-    quoteSubtitle: 'Regional Reabilitasiya Mərkəzi',
-    feat1Title: 'Akkreditasiya',
-    feat1Text: 'Azərbaycan Səhiyyə Nazirliyinin lisenziyasına malikdir',
-    feat2Title: '7/7 Açıqdır',
-    feat2Text: 'Həftənin 7 günü, hər gün xidmətinizdəyik',
-    feat3Title: 'Sertifikatlı Həkimlər',
-    feat3Text: 'Beynəlxalq sertifikatlara malik mütəxəssislər',
-    feat4Title: 'Fərdi Yanaşma',
-    feat4Text: 'Hər xəstə üçün ayrıca müalicə proqramı',
-  },
-  services: {
-    badge: 'Xidmətlərimiz',
-    heading1: 'Biz Nə',
-    headingGradient: 'Təklif Edirik?',
-    subtext:
-      'Müasir avadanlıqlar və peşəkar reabilitasiya üsulları ilə sağlamlığınıza qovuşmağınıza dəstək oluruq.',
-  },
-  doctors: {
-    badge: 'Mütəxəssislərimiz',
-    heading1: 'Peşəkar',
-    headingGradient: 'Həkimlərimiz',
-    subtext:
-      'Hər biri öz sahəsinin mütəxəssisi olan komandamız sizin sağalmanız üçün əliavər olacaq.',
-  },
-  reviewsSection: {
-    badge: 'Rəylər',
-    heading1: 'Pasiyentlərimiz Bizim',
-    headingGradient: 'Haqqımızda Nə Deyir?',
-    subtext: 'Müalicə alan pasiyentlərimizin real təcrübələri və fikirləri.',
-    list: [
-      {
-        id: '1',
-        name: 'Aysel K.',
-        rating: 5,
-        comment: 'Çox peşəkar komanda və olduqca səmimi atmosfer. Hər şey ətraflı şəkildə izah olundu, reabilitasiya prosesi tam ağrısız və stressiz keçdi. Hər kəsə tövsiyə edirəm.',
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
-      },
-      {
-        id: '2',
-        name: 'Nicat P.',
-        rating: 5,
-        comment: 'Müasir klinika, həkimlərin pasiyentə yanaşması mükəmməldir. Hər detal incəliyinə qədər düşünülüb. Müalicədən tam razı qaldım, ağrılarım keçdi.',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-      },
-      {
-        id: '3',
-        name: 'Elvin M.',
-        rating: 5,
-        comment: 'Uşağımın sensor inteqrasiya terapiyası üçün müraciət etdik. Cəmi bir neçə seansdan sonra müsbət dəyişiklikləri hiss etdik. Həkimlərə çox təşəkkür edirik.',
-        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
-      }
-    ]
-  },
-  blog: {
-    badge: '+ Bloq',
-    heading1: 'Faydalı',
-    headingGradient: 'Məqalələr',
-    subtext:
-      'Reabilitasiya, uşaq inkişafı və sağlam həyat tərzi haqqında ekspert tövsiyələri.',
-    ctaButton: 'Bütün Məqalələri Gör',
-  },
-  footer: {
-    slogan: 'Sağlamlıq artıq uzaqda deyil!',
-    description:
-      'Tovuz şəhərinin ən müasir tibbi reabilitasiya mərkəzi. İxtisaslı həkimlər, müasir avadanlıq, fərdi yanaşma.',
-    phone: '099 301 44 44',
-    address: 'H.Əliyev pros., 298, Tovuz',
-    email: 'info@reabilitasiya.az',
-    workdaysHours: '09:00 – 17:00',
-    saturdayHours: '09:00 – 15:00',
-    copyright: 'Regional Müalicə və Reabilitasiya Mərkəzi. Bütün hüquqlar qorunur.',
-  },
-};
+// Export everything from siteContentShared so client components can import them from siteContent
+export * from './siteContentShared';
 
 const SiteContentContext = createContext<{
   content: SiteContent;
   saveContent: (updated: SiteContent) => Promise<void>;
   resetContent: () => Promise<void>;
   loaded: boolean;
+
+  doctors: Doctor[];
+  services: Service[];
+  blogPosts: BlogPost[];
+
+  saveDoctor: (doctor: Doctor) => Promise<void>;
+  deleteDoctor: (id: string) => Promise<void>;
+  saveService: (service: Service) => Promise<void>;
+  deleteService: (id: string) => Promise<void>;
+  saveBlogPost: (post: BlogPost) => Promise<void>;
+  deleteBlogPost: (id: string) => Promise<void>;
 }>({
   content: defaultContent,
   saveContent: async () => {},
   resetContent: async () => {},
   loaded: false,
+
+  doctors: [],
+  services: [],
+  blogPosts: [],
+
+  saveDoctor: async () => {},
+  deleteDoctor: async () => {},
+  saveService: async () => {},
+  deleteService: async () => {},
+  saveBlogPost: async () => {},
+  deleteBlogPost: async () => {},
 });
 
 export function useSiteContent() {
   return useContext(SiteContentContext);
 }
 
+function isUuid(id: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+}
+
 export function SiteContentProvider({
   children,
   initialContent,
+  initialDoctors,
+  initialServices,
+  initialBlogPosts,
 }: {
   children: React.ReactNode;
   initialContent: SiteContent;
+  initialDoctors?: Doctor[];
+  initialServices?: Service[];
+  initialBlogPosts?: BlogPost[];
 }) {
   const [content, setContent] = useState<SiteContent>(initialContent || defaultContent);
+  const [doctors, setDoctors] = useState<Doctor[]>(initialDoctors || defaultDoctors);
+  const [services, setServices] = useState<Service[]>(initialServices || defaultServices);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(initialBlogPosts || defaultBlogPosts);
   const [loaded, setLoaded] = useState(true);
 
-  // Sync client-side state if initialContent changes (e.g. server-side fetches)
+  // Sync client-side state if initial values change (from SSR)
   useEffect(() => {
-    if (initialContent) {
-      setContent(initialContent);
-    }
+    if (initialContent) setContent(initialContent);
   }, [initialContent]);
+
+  useEffect(() => {
+    if (initialDoctors) setDoctors(initialDoctors);
+  }, [initialDoctors]);
+
+  useEffect(() => {
+    if (initialServices) setServices(initialServices);
+  }, [initialServices]);
+
+  useEffect(() => {
+    if (initialBlogPosts) setBlogPosts(initialBlogPosts);
+  }, [initialBlogPosts]);
 
   const saveContent = useCallback(async (updated: SiteContent) => {
     setContent(updated);
@@ -284,28 +125,169 @@ export function SiteContentProvider({
     }
   }, []);
 
+  // Doctors CRUD
+  const saveDoctor = useCallback(async (doc: Doctor) => {
+    try {
+      const dbDoc = mapDoctorToDb(doc);
+      const isUpdate = !!dbDoc.id;
+      
+      let res;
+      if (isUpdate) {
+        res = await supabase.from('doctors').upsert(dbDoc).select();
+      } else {
+        res = await supabase.from('doctors').insert(dbDoc).select();
+      }
+
+      if (res.error) {
+        console.error('Error saving doctor to Supabase:', res.error.message);
+        return;
+      }
+
+      const savedDoc = mapDbDoctor(res.data[0]);
+      setDoctors(prev => {
+        if (isUpdate) {
+          return prev.map(d => d.id === savedDoc.id ? savedDoc : d).sort((a, b) => a.orderIndex - b.orderIndex);
+        } else {
+          const exists = prev.some(d => d.id === doc.id);
+          if (exists) {
+            return prev.map(d => d.id === doc.id ? savedDoc : d).sort((a, b) => a.orderIndex - b.orderIndex);
+          } else {
+            return [...prev, savedDoc].sort((a, b) => a.orderIndex - b.orderIndex);
+          }
+        }
+      });
+    } catch (err) {
+      console.error('Failed to save doctor:', err);
+    }
+  }, [doctors]);
+
+  const deleteDoctor = useCallback(async (id: string) => {
+    setDoctors(prev => prev.filter(d => d.id !== id));
+    if (isUuid(id)) {
+      try {
+        const { error } = await supabase.from('doctors').delete().eq('id', id);
+        if (error) console.error('Error deleting doctor from Supabase:', error.message);
+      } catch (err) {
+        console.error('Failed to delete doctor:', err);
+      }
+    }
+  }, []);
+
+  // Services CRUD
+  const saveService = useCallback(async (svc: Service) => {
+    try {
+      const dbSvc = mapServiceToDb(svc);
+      const isUpdate = !!dbSvc.id;
+      
+      let res;
+      if (isUpdate) {
+        res = await supabase.from('services').upsert(dbSvc).select();
+      } else {
+        res = await supabase.from('services').insert(dbSvc).select();
+      }
+
+      if (res.error) {
+        console.error('Error saving service to Supabase:', res.error.message);
+        return;
+      }
+
+      const savedSvc = mapDbService(res.data[0]);
+      setServices(prev => {
+        if (isUpdate) {
+          return prev.map(s => s.id === savedSvc.id ? savedSvc : s).sort((a, b) => a.orderIndex - b.orderIndex);
+        } else {
+          const exists = prev.some(s => s.id === svc.id);
+          if (exists) {
+            return prev.map(s => s.id === svc.id ? savedSvc : s).sort((a, b) => a.orderIndex - b.orderIndex);
+          } else {
+            return [...prev, savedSvc].sort((a, b) => a.orderIndex - b.orderIndex);
+          }
+        }
+      });
+    } catch (err) {
+      console.error('Failed to save service:', err);
+    }
+  }, [services]);
+
+  const deleteService = useCallback(async (id: string) => {
+    setServices(prev => prev.filter(s => s.id !== id));
+    if (isUuid(id)) {
+      try {
+        const { error } = await supabase.from('services').delete().eq('id', id);
+        if (error) console.error('Error deleting service from Supabase:', error.message);
+      } catch (err) {
+        console.error('Failed to delete service:', err);
+      }
+    }
+  }, []);
+
+  // Blogs CRUD
+  const saveBlogPost = useCallback(async (post: BlogPost) => {
+    try {
+      const dbBlog = mapBlogPostToDb(post);
+      const isUpdate = !!dbBlog.id;
+      
+      let res;
+      if (isUpdate) {
+        res = await supabase.from('blogs').upsert(dbBlog).select();
+      } else {
+        res = await supabase.from('blogs').insert(dbBlog).select();
+      }
+
+      if (res.error) {
+        console.error('Error saving blog post to Supabase:', res.error.message);
+        return;
+      }
+
+      const savedPost = mapDbBlogPost(res.data[0]);
+      setBlogPosts(prev => {
+        if (isUpdate) {
+          return prev.map(p => p.id === savedPost.id ? savedPost : p).sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+        } else {
+          const exists = prev.some(p => p.id === post.id);
+          if (exists) {
+            return prev.map(p => p.id === post.id ? savedPost : p).sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+          } else {
+            return [...prev, savedPost].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+          }
+        }
+      });
+    } catch (err) {
+      console.error('Failed to save blog post:', err);
+    }
+  }, [blogPosts]);
+
+  const deleteBlogPost = useCallback(async (id: string) => {
+    setBlogPosts(prev => prev.filter(p => p.id !== id));
+    if (isUuid(id)) {
+      try {
+        const { error } = await supabase.from('blogs').delete().eq('id', id);
+        if (error) console.error('Error deleting blog post from Supabase:', error.message);
+      } catch (err) {
+        console.error('Failed to delete blog post:', err);
+      }
+    }
+  }, []);
+
   return (
-    <SiteContentContext.Provider value={{ content, saveContent, resetContent, loaded }}>
+    <SiteContentContext.Provider
+      value={{
+        content,
+        saveContent,
+        resetContent,
+        loaded,
+        doctors,
+        services,
+        blogPosts,
+        saveDoctor,
+        deleteDoctor,
+        saveService,
+        deleteService,
+        saveBlogPost,
+        deleteBlogPost,
+      }}
+    >
       {children}
     </SiteContentContext.Provider>
   );
-}
-
-// ── Deep merge helper ────────────────────────────────────────────
-export function deepMerge<T extends object>(defaults: T, overrides: Partial<T>): T {
-  const result = { ...defaults };
-  for (const key in overrides) {
-    const k = key as keyof T;
-    if (
-      overrides[k] !== undefined &&
-      typeof overrides[k] === 'object' &&
-      !Array.isArray(overrides[k]) &&
-      typeof defaults[k] === 'object'
-    ) {
-      result[k] = deepMerge(defaults[k] as object, overrides[k] as object) as T[keyof T];
-    } else if (overrides[k] !== undefined) {
-      result[k] = overrides[k] as T[keyof T];
-    }
-  }
-  return result;
 }

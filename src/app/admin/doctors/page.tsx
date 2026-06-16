@@ -8,11 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { doctors as initialDoctors } from '@/lib/data';
+import { useSiteContent } from '@/lib/siteContent';
 import { Doctor } from '@/lib/types';
 
 export default function AdminDoctors() {
-  const [list, setList] = useState<Doctor[]>(initialDoctors);
+  const { doctors: list, saveDoctor, deleteDoctor } = useSiteContent();
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Doctor | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -32,16 +32,15 @@ export default function AdminDoctors() {
 
   const handleSave = () => {
     if (editing) {
-      setList(prev => prev.map(d => d.id === editing.id ? { ...d, ...form } as Doctor : d));
+      saveDoctor({ ...editing, ...form } as Doctor);
     } else {
-      const newDoc: Doctor = { ...form as Doctor, id: Date.now().toString() };
-      setList(prev => [...prev, newDoc]);
+      saveDoctor({ ...form, id: Date.now().toString() } as Doctor);
     }
     setModalOpen(false);
   };
 
   const handleDelete = (id: string) => {
-    setList(prev => prev.filter(d => d.id !== id));
+    deleteDoctor(id);
     setDeleteId(null);
   };
 

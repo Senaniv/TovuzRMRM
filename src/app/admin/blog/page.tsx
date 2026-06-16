@@ -8,11 +8,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { blogPosts as initialPosts } from '@/lib/data';
+import { useSiteContent } from '@/lib/siteContent';
 import { BlogPost } from '@/lib/types';
 
 export default function AdminBlog() {
-  const [list, setList] = useState<BlogPost[]>(initialPosts);
+  const { blogPosts: list, saveBlogPost, deleteBlogPost } = useSiteContent();
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<BlogPost | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -33,16 +33,15 @@ export default function AdminBlog() {
   const handleSave = () => {
     const slug = form.slug || form.title?.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || '';
     if (editing) {
-      setList(prev => prev.map(p => p.id === editing.id ? { ...p, ...form, slug } as BlogPost : p));
+      saveBlogPost({ ...editing, ...form, slug } as BlogPost);
     } else {
-      const newPost: BlogPost = { ...form as BlogPost, id: Date.now().toString(), slug, createdAt: new Date().toISOString() };
-      setList(prev => [...prev, newPost]);
+      saveBlogPost({ ...form, id: Date.now().toString(), slug, createdAt: new Date().toISOString() } as BlogPost);
     }
     setModalOpen(false);
   };
 
   const handleDelete = (id: string) => {
-    setList(prev => prev.filter(p => p.id !== id));
+    deleteBlogPost(id);
     setDeleteId(null);
   };
 

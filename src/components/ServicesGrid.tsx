@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import { Brain, Activity, Baby, HeartHandshake, Microscope, Sparkles, ArrowRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { services } from '@/lib/data';
 import { useSiteContent } from '@/lib/siteContent';
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -16,7 +15,7 @@ const iconMap: Record<string, React.ReactNode> = {
 };
 
 export default function ServicesGrid() {
-  const { content } = useSiteContent();
+  const { content, services } = useSiteContent();
   const s = content.services;
   return (
     <section id="services" className="py-24 bg-[#f5f7f2]">

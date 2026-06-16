@@ -8,13 +8,12 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { doctors } from '@/lib/data';
 import AppointmentModal from './AppointmentModal';
 import { useSiteContent } from '@/lib/siteContent';
 
 export default function DoctorsCarousel() {
   const [modalOpen, setModalOpen] = useState(false);
-  const { content } = useSiteContent();
+  const { content, doctors } = useSiteContent();
   const d = content.doctors;
 
   const [emblaRef, emblaApi] = useEmblaCarousel(

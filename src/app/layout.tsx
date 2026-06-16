@@ -3,8 +3,10 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp';
-import { SiteContentProvider, defaultContent, deepMerge } from '@/lib/siteContent';
+import { SiteContentProvider } from '@/lib/siteContent';
+import { defaultContent, deepMerge, mapDbDoctor, mapDbService, mapDbBlogPost } from '@/lib/siteContentShared';
 import { supabase } from '@/lib/supabase';
+import { doctors as defaultDoctors, services as defaultServices, blogPosts as defaultBlogPosts } from '@/lib/data';
 
 export const metadata: Metadata = {
   title: 'Regional Müalicə və Reabilitasiya Mərkəzi | Tovuz',
@@ -44,12 +46,77 @@ async function getSiteContent() {
   return defaultContent;
 }
 
+async function getDoctors() {
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!supabaseUrl || !supabaseAnonKey) return defaultDoctors;
+
+    const { data, error } = await supabase.from('doctors').select('*');
+    if (error) {
+      console.warn('Failed to fetch doctors, using defaults:', error.message);
+      return defaultDoctors;
+    }
+    if (data && data.length > 0) {
+      return data.map(mapDbDoctor).sort((a, b) => a.orderIndex - b.orderIndex);
+    }
+  } catch (err) {
+    console.warn('Failed to fetch doctors, using defaults:', err);
+  }
+  return defaultDoctors;
+}
+
+async function getServices() {
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!supabaseUrl || !supabaseAnonKey) return defaultServices;
+
+    const { data, error } = await supabase.from('services').select('*');
+    if (error) {
+      console.warn('Failed to fetch services, using defaults:', error.message);
+      return defaultServices;
+    }
+    if (data && data.length > 0) {
+      return data.map(mapDbService).sort((a, b) => a.orderIndex - b.orderIndex);
+    }
+  } catch (err) {
+    console.warn('Failed to fetch services, using defaults:', err);
+  }
+  return defaultServices;
+}
+
+async function getBlogPosts() {
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!supabaseUrl || !supabaseAnonKey) return defaultBlogPosts;
+
+    const { data, error } = await supabase.from('blogs').select('*');
+    if (error) {
+      console.warn('Failed to fetch blogs, using defaults:', error.message);
+      return defaultBlogPosts;
+    }
+    if (data && data.length > 0) {
+      return data.map(mapDbBlogPost).sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+    }
+  } catch (err) {
+    console.warn('Failed to fetch blogs, using defaults:', err);
+  }
+  return defaultBlogPosts;
+}
+
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const content = await getSiteContent();
+  const [content, doctors, services, blogPosts] = await Promise.all([
+    getSiteContent(),
+    getDoctors(),
+    getServices(),
+    getBlogPosts(),
+  ]);
 
   return (
     <html lang="az" suppressHydrationWarning>
@@ -62,7 +129,12 @@ export default async function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <SiteContentProvider initialContent={content}>
+        <SiteContentProvider
+          initialContent={content}
+          initialDoctors={doctors}
+          initialServices={services}
+          initialBlogPosts={blogPosts}
+        >
           <Header />
           <main>{children}</main>
           <Footer />

@@ -3,14 +3,15 @@
 import { motion } from 'framer-motion';
 import { Calendar, ArrowRight, BookOpen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { blogPosts } from '@/lib/data';
 import { useSiteContent } from '@/lib/siteContent';
 
 const AZ_MONTHS = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avqust', 'sentyabr', 'oktyabr', 'noyabr', 'dekabr'];
 
 function formatDateAz(dateStr: string): string {
+  if (!dateStr || typeof dateStr !== 'string') return '';
   const [year, month, day] = dateStr.split('-').map(Number);
-  return `${day} ${AZ_MONTHS[month - 1]} ${year}`;
+  if (!month || month < 1 || month > 12) return dateStr;
+  return `${day || ''} ${AZ_MONTHS[month - 1]} ${year || ''}`;
 }
 
 const categoryColors: Record<string, string> = {
@@ -26,7 +27,7 @@ const placeholderColors = [
 ];
 
 export default function BlogSection() {
-  const { content } = useSiteContent();
+  const { content, blogPosts } = useSiteContent();
   const b = content.blog;
   return (
     <section id="blog" className="py-24 bg-[#f8f9fa]">

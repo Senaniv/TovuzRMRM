@@ -8,11 +8,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { services as initialServices } from '@/lib/data';
+import { useSiteContent } from '@/lib/siteContent';
 import { Service } from '@/lib/types';
 
 export default function AdminServices() {
-  const [list, setList] = useState<Service[]>(initialServices);
+  const { services: list, saveService, deleteService } = useSiteContent();
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Service | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -33,16 +33,15 @@ export default function AdminServices() {
   const handleSave = () => {
     const subItems = (form.subItemsText || '').split('\n').filter(Boolean);
     if (editing) {
-      setList(prev => prev.map(s => s.id === editing.id ? { ...s, ...form, subItems } as Service : s));
+      saveService({ ...editing, ...form, subItems } as Service);
     } else {
-      const newSvc: Service = { ...form as Service, id: Date.now().toString(), subItems };
-      setList(prev => [...prev, newSvc]);
+      saveService({ ...form, id: Date.now().toString(), subItems } as Service);
     }
     setModalOpen(false);
   };
 
   const handleDelete = (id: string) => {
-    setList(prev => prev.filter(s => s.id !== id));
+    deleteService(id);
     setDeleteId(null);
   };
 
