@@ -134,7 +134,6 @@ export function SiteContentProvider({
           image_url: data.image_url,
           is_active: data.is_active,
           expires_at: data.expires_at,
-          updated_at: new Date().toISOString()
         });
       if (error) {
         console.error('Failed to save popup data to Supabase:', error.message);
