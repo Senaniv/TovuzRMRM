@@ -76,7 +76,7 @@ export default function Header() {
                   <Image src="/logo.png" alt="Logo" fill className="object-contain" />
                 </div>
                 {/* Mobile-only brand name beside logo */}
-                <span className="block md:hidden text-xs font-semibold ml-2 max-w-[180px] leading-tight" style={{ color: '#3f7215', fontFamily: 'Raleway, sans-serif' }}>
+                <span className="block md:hidden text-sm font-bold ml-2 max-w-[190px] leading-tight" style={{ color: '#3f7215', fontFamily: 'Raleway, sans-serif' }}>
                   Regional Müalicə və Reabilitasiya Mərkəzi
                 </span>
                 {/* Desktop brand name (hidden on mobile) */}
