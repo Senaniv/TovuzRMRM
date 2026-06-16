@@ -65,7 +65,7 @@ export default function ServicesGrid() {
                 </h3>
 
                 {/* Description */}
-                <p className="text-xs md:text-sm text-gray-500 group-hover:text-[#3f7215]/80 transition-colors duration-300 leading-relaxed mb-4 md:mb-6 max-w-xs">
+                <p className="hidden md:block text-xs md:text-sm text-gray-500 group-hover:text-[#3f7215]/80 transition-colors duration-300 leading-relaxed mb-4 md:mb-6 max-w-xs">
                   {service.description}
                 </p>
 
