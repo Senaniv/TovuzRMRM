@@ -3,6 +3,8 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp';
+import { SiteContentProvider, defaultContent, deepMerge } from '@/lib/siteContent';
+import { supabase } from '@/lib/supabase';
 
 export const metadata: Metadata = {
   title: 'Regional Müalicə və Reabilitasiya Mərkəzi | Tovuz',
@@ -16,11 +18,39 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+async function getSiteContent() {
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!supabaseUrl || !supabaseAnonKey) {
+      return defaultContent;
+    }
+    const { data, error } = await supabase
+      .from('site_content')
+      .select('content')
+      .eq('id', 1)
+      .maybeSingle();
+    
+    if (error) {
+      console.warn('Supabase fetch error, using defaults:', error.message);
+      return defaultContent;
+    }
+    if (data && data.content) {
+      return deepMerge(defaultContent, data.content);
+    }
+  } catch (err) {
+    console.warn('Failed to fetch from Supabase, using defaults:', err);
+  }
+  return defaultContent;
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const content = await getSiteContent();
+
   return (
     <html lang="az" suppressHydrationWarning>
       <head>
@@ -32,10 +62,12 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <FloatingWhatsApp />
+        <SiteContentProvider initialContent={content}>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <FloatingWhatsApp />
+        </SiteContentProvider>
       </body>
     </html>
   );

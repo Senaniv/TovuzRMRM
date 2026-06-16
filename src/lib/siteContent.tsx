@@ -1,10 +1,11 @@
 // ─────────────────────────────────────────────────────────────
 //  Site Content — single source of truth for all editable text
-//  Admin edits → saved to localStorage → components re-render
+//  Admin edits → saved to Supabase → components re-render
 // ─────────────────────────────────────────────────────────────
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { supabase } from './supabase';
 
 export interface Review {
   id: string;
@@ -222,49 +223,76 @@ export const defaultContent: SiteContent = {
   },
 };
 
-const STORAGE_KEY = 'rehab_site_content_v4';
+const SiteContentContext = createContext<{
+  content: SiteContent;
+  saveContent: (updated: SiteContent) => Promise<void>;
+  resetContent: () => Promise<void>;
+  loaded: boolean;
+}>({
+  content: defaultContent,
+  saveContent: async () => {},
+  resetContent: async () => {},
+  loaded: false,
+});
 
-// ── HOOK ────────────────────────────────────────────────────────
 export function useSiteContent() {
-  const [content, setContent] = useState<SiteContent>(defaultContent);
-  const [loaded, setLoaded] = useState(false);
+  return useContext(SiteContentContext);
+}
 
-  // Load from localStorage on mount (client-only)
+export function SiteContentProvider({
+  children,
+  initialContent,
+}: {
+  children: React.ReactNode;
+  initialContent: SiteContent;
+}) {
+  const [content, setContent] = useState<SiteContent>(initialContent || defaultContent);
+  const [loaded, setLoaded] = useState(true);
+
+  // Sync client-side state if initialContent changes (e.g. server-side fetches)
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as SiteContent;
-        // Deep merge with defaults so new keys don't break old saves
-        setContent(deepMerge(defaultContent, parsed));
-      }
-    } catch {
-      // localStorage not available — use defaults
+    if (initialContent) {
+      setContent(initialContent);
     }
-    setLoaded(true);
-  }, []);
+  }, [initialContent]);
 
-  const saveContent = useCallback((updated: SiteContent) => {
+  const saveContent = useCallback(async (updated: SiteContent) => {
     setContent(updated);
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    } catch {
-      // ignore storage errors
+      const { error } = await supabase
+        .from('site_content')
+        .upsert({ id: 1, content: updated, updated_at: new Date().toISOString() });
+      if (error) {
+        console.error('Failed to save content to Supabase:', error.message);
+      }
+    } catch (err) {
+      console.error('Failed to save content to Supabase:', err);
     }
   }, []);
 
-  const resetContent = useCallback(() => {
+  const resetContent = useCallback(async () => {
     setContent(defaultContent);
     try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {}
+      const { error } = await supabase
+        .from('site_content')
+        .upsert({ id: 1, content: defaultContent, updated_at: new Date().toISOString() });
+      if (error) {
+        console.error('Failed to reset content in Supabase:', error.message);
+      }
+    } catch (err) {
+      console.error('Failed to reset content in Supabase:', err);
+    }
   }, []);
 
-  return { content, saveContent, resetContent, loaded };
+  return (
+    <SiteContentContext.Provider value={{ content, saveContent, resetContent, loaded }}>
+      {children}
+    </SiteContentContext.Provider>
+  );
 }
 
 // ── Deep merge helper ────────────────────────────────────────────
-function deepMerge<T extends object>(defaults: T, overrides: Partial<T>): T {
+export function deepMerge<T extends object>(defaults: T, overrides: Partial<T>): T {
   const result = { ...defaults };
   for (const key in overrides) {
     const k = key as keyof T;
