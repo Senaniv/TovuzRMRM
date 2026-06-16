@@ -95,9 +95,6 @@ export default function AdminDoctors() {
               <p className="text-xs text-[#76c122] font-medium mt-0.5">{doc.title}</p>
               <div className="flex items-center gap-3 mt-3">
                 <span className="flex items-center gap-1 text-xs text-gray-500">
-                  <Clock className="w-3 h-3" />{doc.experience}
-                </span>
-                <span className="flex items-center gap-1 text-xs text-gray-500">
                   <Star className="w-3 h-3 text-amber-400" />5.0
                 </span>
               </div>
@@ -126,7 +123,6 @@ export default function AdminDoctors() {
               { id: 'name', label: 'Ad Soyad', placeholder: 'Dr. Ad Soyad' },
               { id: 'title', label: 'Vəzifə', placeholder: 'Uzman Nevroloq' },
               { id: 'specialty', label: 'İxtisas', placeholder: 'Nevrologiya, EEQ' },
-              { id: 'experience', label: 'Təcrübə', placeholder: '10 il' },
             ].map(field => (
               <div key={field.id}>
                 <Label className="text-xs font-semibold text-gray-600 mb-1.5 block">{field.label}</Label>
