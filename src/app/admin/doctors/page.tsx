@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useSiteContent } from '@/lib/siteContent';
 import { Doctor } from '@/lib/types';
-import { uploadImage } from '@/lib/supabase';
+import { uploadImage, deleteImageByUrl } from '@/lib/supabase';
 
 export default function AdminDoctors() {
   const { doctors: list, saveDoctor, deleteDoctor } = useSiteContent();
@@ -42,7 +42,11 @@ export default function AdminDoctors() {
   };
 
   const handleDelete = (id: string) => {
+    const doc = list.find(d => d.id === id);
     deleteDoctor(id);
+    if (doc && doc.image) {
+      deleteImageByUrl(doc.image);
+    }
     setDeleteId(null);
   };
 
@@ -150,9 +154,13 @@ export default function AdminDoctors() {
                   const file = e.target.files?.[0];
                   if (!file) return;
                   setIsUploadingImage(true);
+                  const oldUrl = form.image;
                   try {
                     const url = await uploadImage(file, 'doctors');
                     setForm(f => ({ ...f, image: url }));
+                    if (oldUrl) {
+                      await deleteImageByUrl(oldUrl);
+                    }
                   } catch (err: any) {
                     alert(err.message || 'Şəkil yüklənərkən xəta baş verdi');
                   } finally {

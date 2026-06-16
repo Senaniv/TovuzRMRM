@@ -33,3 +33,25 @@ export async function uploadImage(file: File, folder: string): Promise<string> {
   return urlData.publicUrl;
 }
 
+export async function deleteImageByUrl(url: string): Promise<void> {
+  if (!url) return;
+  try {
+    const marker = '/storage/v1/object/public/rehab-media/';
+    if (url.includes(marker)) {
+      const filePath = url.split(marker)[1];
+      if (filePath) {
+        const { error } = await supabase.storage
+          .from('rehab-media')
+          .remove([filePath]);
+        if (error) {
+          console.error('Failed to delete old image from storage:', error.message);
+        } else {
+          console.log('Successfully deleted old image:', filePath);
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Error deleting image by URL:', err);
+  }
+}
+

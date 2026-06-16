@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { Phone, Menu, X, ChevronRight, MapPin, Mail, User, Instagram, MessageCircle, Facebook } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import AppointmentModal from './AppointmentModal';
 import { useSiteContent } from '@/lib/siteContent';
 
 const navLinks = [
@@ -19,7 +18,6 @@ const navLinks = [
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { content } = useSiteContent();
   const hdr = content.header;
@@ -112,15 +110,17 @@ export default function Header() {
                   <span>{hdr.phone}</span>
                 </a>
 
-                <Button
+                <a
                   id="header-appointment-btn"
-                  onClick={() => setModalOpen(true)}
-                  className="hidden sm:flex btn-primary text-white px-6 py-2.5 rounded-full text-sm font-semibold shadow-md hover:shadow-lg transition-all"
+                  href="https://wa.me/994993014444?text=Salam,%20klinikada%20qəbula%20yazılmaq%20istəyirəm."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden sm:flex items-center justify-center btn-primary text-white px-6 py-2.5 rounded-full text-sm font-semibold shadow-md hover:shadow-lg transition-all cursor-pointer"
                   style={{ background: 'linear-gradient(135deg, #76c122, #5fa010)' }}
                 >
                   Qəbula yazıl
                   <ChevronRight className="w-4 h-4 ml-1" />
-                </Button>
+                </a>
 
                 {/* Mobile menu */}
                 <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -164,13 +164,16 @@ export default function Header() {
                         <Phone className="w-4 h-4" />
                         099 301 44 44
                       </a>
-                      <Button
-                        onClick={() => { setModalOpen(true); setMobileOpen(false); }}
-                        className="btn-primary text-white rounded-full font-semibold"
+                      <a
+                        href="https://wa.me/994993014444?text=Salam,%20klinikada%20qəbula%20yazılmaq%20istəyirəm."
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center justify-center btn-primary text-white py-3 rounded-full font-semibold cursor-pointer"
                         style={{ background: 'linear-gradient(135deg, #76c122, #5fa010)' }}
                       >
                         Qəbula yazıl
-                      </Button>
+                      </a>
                     </div>
                   </SheetContent>
                 </Sheet>
@@ -179,8 +182,6 @@ export default function Header() {
           </div>
         </header>
       </div>
-
-      <AppointmentModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 }

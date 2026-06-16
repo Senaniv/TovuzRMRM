@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { useSiteContent } from '@/lib/siteContent';
 import { BlogPost } from '@/lib/types';
-import { uploadImage } from '@/lib/supabase';
+import { uploadImage, deleteImageByUrl } from '@/lib/supabase';
 
 export default function AdminBlog() {
   const { blogPosts: list, saveBlogPost, deleteBlogPost } = useSiteContent();
@@ -43,7 +43,11 @@ export default function AdminBlog() {
   };
 
   const handleDelete = (id: string) => {
+    const post = list.find(p => p.id === id);
     deleteBlogPost(id);
+    if (post && post.coverImage) {
+      deleteImageByUrl(post.coverImage);
+    }
     setDeleteId(null);
   };
 
@@ -150,9 +154,13 @@ export default function AdminBlog() {
                   const file = e.target.files?.[0];
                   if (!file) return;
                   setIsUploadingImage(true);
+                  const oldUrl = form.coverImage;
                   try {
                     const url = await uploadImage(file, 'blogs');
                     setForm(p => ({ ...p, coverImage: url }));
+                    if (oldUrl) {
+                      await deleteImageByUrl(oldUrl);
+                    }
                   } catch (err: any) {
                     alert(err.message || 'Şəkil yüklənərkən xəta baş verdi');
                   } finally {

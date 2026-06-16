@@ -8,11 +8,9 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import AppointmentModal from './AppointmentModal';
 import { useSiteContent } from '@/lib/siteContent';
 
 export default function DoctorsCarousel() {
-  const [modalOpen, setModalOpen] = useState(false);
   const { content, doctors } = useSiteContent();
   const d = content.doctors;
 
@@ -101,19 +99,19 @@ export default function DoctorsCarousel() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <Button
-              onClick={() => setModalOpen(true)}
-              className="btn-primary px-8 py-3.5 rounded-full text-base font-bold shadow-lg text-white"
+            <a
+              href="https://wa.me/994993014444?text=Salam,%20klinikada%20qəbula%20yazılmaq%20istəyirəm."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center btn-primary px-8 py-3.5 rounded-full text-base font-bold shadow-lg text-white hover:scale-105 transition-transform cursor-pointer"
               style={{ background: 'linear-gradient(135deg, #76c122, #5fa010)' }}
             >
               Qəbula yazıl
               <ChevronRight className="w-5 h-5 ml-1.5" />
-            </Button>
+            </a>
           </motion.div>
         </div>
       </section>
-
-      <AppointmentModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 }

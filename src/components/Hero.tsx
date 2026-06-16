@@ -6,11 +6,9 @@ import { motion } from 'framer-motion';
 import { Star, Users, Award, ChevronRight, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import AppointmentModal from './AppointmentModal';
 import { useSiteContent } from '@/lib/siteContent';
 
 export default function Hero() {
-  const [modalOpen, setModalOpen] = useState(false);
   const { content } = useSiteContent();
   const h = content.hero;
 
@@ -69,15 +67,17 @@ export default function Hero() {
                 transition={{ duration: 0.5, delay: 0.3 }}
                 className="flex flex-wrap gap-4"
               >
-                <Button
+                <a
                   id="hero-appointment-btn"
-                  onClick={() => setModalOpen(true)}
-                  className="btn-primary px-8 py-4 rounded-full text-base font-bold shadow-lg text-white"
+                  href="https://wa.me/994993014444?text=Salam,%20klinikada%20qəbula%20yazılmaq%20istəyirəm."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center btn-primary px-8 py-4 rounded-full text-base font-bold shadow-lg text-white hover:scale-105 transition-transform cursor-pointer"
                   style={{ background: 'linear-gradient(135deg, #76c122, #5fa010)' }}
                 >
                   {h.ctaPrimary}
                   <ChevronRight className="w-5 h-5 ml-1.5" />
-                </Button>
+                </a>
                 <a
                   href="#services"
                   className="inline-flex items-center justify-center px-8 py-4 rounded-full text-base font-bold border-2 border-[#76c122] text-[#3f7215] hover:bg-green-50 transition-all duration-200"
@@ -181,7 +181,6 @@ export default function Hero() {
         </div>
       </section>
 
-      <AppointmentModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 }

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Megaphone, Save, Check, AlertCircle, Eye, Trash2, Calendar, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSiteContent } from '@/lib/siteContent';
-import { uploadImage } from '@/lib/supabase';
+import { uploadImage, deleteImageByUrl } from '@/lib/supabase';
 
 function toLocalDatetimeString(dateStr: string): string {
   if (!dateStr) return '';
@@ -167,9 +167,13 @@ export default function AdminPopupPage() {
                     if (!file) return;
                     setIsUploadingImage(true);
                     setError('');
+                    const oldUrl = imageUrl;
                     try {
                       const url = await uploadImage(file, 'popup');
                       setImageUrl(url);
+                      if (oldUrl) {
+                        await deleteImageByUrl(oldUrl);
+                      }
                     } catch (err: any) {
                       setError(err.message || 'Şəkil yüklənərkən xəta baş verdi');
                     } finally {
