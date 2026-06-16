@@ -39,10 +39,11 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        {/* Main grid: brand full-width on mobile, then 2-col Services+Contact, then map */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
 
-          {/* ── 1. Brand column ─────────────────────────────── */}
-          <div className="space-y-5">
+          {/* ── 1. Brand column ──────────────────── */}
+          <div className="space-y-5 md:col-span-2 lg:col-span-1">
             <a href="#hero" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
               <div className="relative w-11 h-11 flex-shrink-0">
                 <Image src="/logo.png" alt="Logo" fill className="object-contain" />
@@ -90,103 +91,106 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* ── 2. Xidmətlər links ──────────────────────────── */}
-          <div>
-            <h4 className="text-white font-semibold mb-5 text-sm uppercase tracking-wider">
-              Xidmətlər
-            </h4>
-            <ul className="space-y-2.5">
-              {serviceLinks.map(link => (
-                <li key={link}>
-                  <a
-                    href="#services"
-                    className="text-sm text-gray-400 hover:text-[#76c122] transition-colors flex items-center gap-2 group"
-                  >
-                    <span className="w-1 h-1 rounded-full bg-[#76c122] opacity-0 group-hover:opacity-100 transition-opacity" />
-                    {link}
-                  </a>
+          {/* ── Xidmətlər + Əlaqə row: side-by-side on mobile ── */}
+          <div className="grid grid-cols-2 gap-4 md:contents">
+            {/* ── 2. Xidmətlər links ────────────────── */}
+            <div>
+              <h4 className="text-white font-semibold mb-5 text-sm uppercase tracking-wider">
+                Xidmətlər
+              </h4>
+              <ul className="space-y-2.5">
+                {serviceLinks.map(link => (
+                  <li key={link}>
+                    <a
+                      href="#services"
+                      className="text-sm text-gray-400 hover:text-[#76c122] transition-colors flex items-center gap-2 group"
+                    >
+                      <span className="w-1 h-1 rounded-full bg-[#76c122] opacity-0 group-hover:opacity-100 transition-opacity" />
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* ── 3. Contact (Əlaqə) ────────────────── */}
+            <div>
+              <h4 className="text-white font-semibold mb-5 text-sm uppercase tracking-wider">
+                Əlaqə
+              </h4>
+              <ul className="space-y-4">
+                {/* Phone */}
+                <li className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Phone className="w-4 h-4 text-[#76c122]" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-0.5">Telefon</p>
+                    <a
+                      href={`tel:+994${f.phone.replace(/[^0-9]/g, '').slice(-9)}`}
+                      className="text-sm text-white font-semibold hover:text-[#76c122] transition-colors"
+                    >
+                      {f.phone}
+                    </a>
+                  </div>
                 </li>
-              ))}
-            </ul>
-          </div>
 
-          {/* ── 3. Contact (Əlaqə) ──────────────────────────── */}
-          <div>
-            <h4 className="text-white font-semibold mb-5 text-sm uppercase tracking-wider">
-              Əlaqə
-            </h4>
-            <ul className="space-y-4">
-              {/* Phone */}
-              <li className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Phone className="w-4 h-4 text-[#76c122]" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 mb-0.5">Telefon</p>
-                  <a
-                    href={`tel:+994${f.phone.replace(/[^0-9]/g, '').slice(-9)}`}
-                    className="text-sm text-white font-semibold hover:text-[#76c122] transition-colors"
-                  >
-                    {f.phone}
-                  </a>
-                </div>
-              </li>
+                {/* Address */}
+                <li className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <MapPin className="w-4 h-4 text-[#76c122]" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-0.5">Ünvan</p>
+                    <p className="text-sm text-gray-300">{f.address}</p>
+                  </div>
+                </li>
 
-              {/* Address */}
-              <li className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <MapPin className="w-4 h-4 text-[#76c122]" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 mb-0.5">Ünvan</p>
-                  <p className="text-sm text-gray-300">{f.address}</p>
-                </div>
-              </li>
+                {/* Email */}
+                <li className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Mail className="w-4 h-4 text-[#76c122]" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-0.5">E-poçt</p>
+                    <a
+                      href={`mailto:${f.email}`}
+                      className="text-sm text-gray-300 hover:text-[#76c122] transition-colors"
+                    >
+                      {f.email}
+                    </a>
+                  </div>
+                </li>
 
-              {/* Email */}
-              <li className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Mail className="w-4 h-4 text-[#76c122]" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 mb-0.5">E-poçt</p>
-                  <a
-                    href={`mailto:${f.email}`}
-                    className="text-sm text-gray-300 hover:text-[#76c122] transition-colors"
-                  >
-                    {f.email}
-                  </a>
-                </div>
-              </li>
-
-              {/* Working Hours */}
-              <li className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Clock className="w-4 h-4 text-[#76c122]" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs text-gray-500 mb-1">İş Saatları</p>
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between gap-4">
-                      <span className="text-xs text-gray-400">Həftəiçi</span>
-                      <span className="text-xs font-semibold text-white bg-gray-800 px-2 py-0.5 rounded-md">
-                        {f.workdaysHours}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between gap-4">
-                      <span className="text-xs text-gray-400">Şənbə</span>
-                      <span className="text-xs font-semibold text-white bg-gray-800 px-2 py-0.5 rounded-md">
-                        {f.saturdayHours}
-                      </span>
+                {/* Working Hours */}
+                <li className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Clock className="w-4 h-4 text-[#76c122]" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-500 mb-1">İş Saatları</p>
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="text-xs text-gray-400">Həftəiçi</span>
+                        <span className="text-xs font-semibold text-white bg-gray-800 px-2 py-0.5 rounded-md">
+                          {f.workdaysHours}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="text-xs text-gray-400">Şənbə</span>
+                        <span className="text-xs font-semibold text-white bg-gray-800 px-2 py-0.5 rounded-md">
+                          {f.saturdayHours}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            </ul>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          {/* ── 4. Google Maps ──────────────────────────────── */}
-          <div>
+          {/* ── 4. Google Maps ───────────────────── */}
+          <div className="md:col-span-2 lg:col-span-1">
             <h4 className="text-white font-semibold mb-5 text-sm uppercase tracking-wider">
               Biz Haradayıq
             </h4>

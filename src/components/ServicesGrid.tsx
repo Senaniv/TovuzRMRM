@@ -39,8 +39,8 @@ export default function ServicesGrid() {
           </p>
         </motion.div>
 
-        {/* Uniform Grid (Centered Cards) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Uniform Grid — 2-col on mobile, 3-col on desktop */}
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
           {services.map((service, i) => {
             return (
               <motion.div
@@ -49,23 +49,23 @@ export default function ServicesGrid() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="bg-white hover:bg-[#f4fae8] rounded-3xl border border-gray-200/50 p-8 flex flex-col items-center text-center shadow-[0_8px_30px_-5px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_-10px_rgba(118,193,34,0.22)] hover:border-[#76c122]/40 transition-all duration-300 ease-out hover:-translate-y-2.5 group relative cursor-pointer"
+                className="bg-white hover:bg-[#f4fae8] rounded-2xl md:rounded-3xl border border-gray-200/50 p-4 md:p-8 flex flex-col items-center text-center shadow-[0_8px_30px_-5px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_-10px_rgba(118,193,34,0.22)] hover:border-[#76c122]/40 transition-all duration-300 ease-out hover:-translate-y-2.5 group relative cursor-pointer"
               >
                 {/* Icon Wrapper (Centered Circle) */}
-                <div className="w-16 h-16 rounded-full bg-[#f4fae8] group-hover:bg-white flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300 shadow-inner">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#f4fae8] group-hover:bg-white flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-all duration-300 shadow-inner">
                   {iconMap[service.icon]}
                 </div>
 
                 {/* Title */}
                 <h3
-                  className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#3f7215] transition-colors"
+                  className="text-sm md:text-xl font-bold text-gray-900 mb-2 md:mb-3 group-hover:text-[#3f7215] transition-colors"
                   style={{ fontFamily: 'Raleway, sans-serif' }}
                 >
                   {service.name}
                 </h3>
 
                 {/* Description */}
-                <p className="text-sm text-gray-500 group-hover:text-[#3f7215]/80 transition-colors duration-300 leading-relaxed mb-6 max-w-xs">
+                <p className="text-xs md:text-sm text-gray-500 group-hover:text-[#3f7215]/80 transition-colors duration-300 leading-relaxed mb-4 md:mb-6 max-w-xs">
                   {service.description}
                 </p>
 

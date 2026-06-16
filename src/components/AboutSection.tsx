@@ -37,14 +37,14 @@ export default function AboutSection() {
             <Badge className="mb-4 px-4 py-1.5 rounded-full text-sm font-semibold border-0" style={{ backgroundColor: '#e8f5d4', color: '#3f7215' }}>
               {a.badge}
             </Badge>
-            <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight" style={{ fontFamily: 'Raleway, sans-serif' }}>
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight" style={{ fontFamily: 'Raleway, sans-serif' }}>
               {a.heading1}{' '}
               <span className="text-gradient">{a.headingGradient}</span>
             </h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
+            <p className="text-gray-600 text-sm sm:text-lg leading-relaxed mb-6">
               {a.paragraph1}
             </p>
-            <p className="text-gray-600 leading-relaxed mb-8">
+            <p className="text-gray-600 text-sm leading-relaxed mb-8">
               {a.paragraph2}
             </p>
 
@@ -90,8 +90,8 @@ export default function AboutSection() {
           </motion.div>
         </div>
 
-        {/* Feature cards aligned side-by-side below the main grid */}
-        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* Feature cards — 2-col on mobile, 4-col on desktop */}
+        <div className="mt-10 md:mt-16 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
           {features.map((feat, i) => (
             <motion.div
               key={i}
@@ -99,14 +99,14 @@ export default function AboutSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="flex items-start gap-3.5 p-5 bg-green-50 rounded-2xl border border-green-100 shadow-sm"
+              className="flex items-start gap-2.5 md:gap-3.5 p-3.5 md:p-5 bg-green-50 rounded-2xl border border-green-100 shadow-sm"
             >
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                <feat.icon className="w-5 h-5 text-[#76c122]" />
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                <feat.icon className="w-4 h-4 md:w-5 md:h-5 text-[#76c122]" />
               </div>
               <div>
-                <p className="text-sm font-bold text-gray-900 leading-snug">{feat.title}</p>
-                <p className="text-xs text-gray-600 mt-1 leading-normal">{feat.text}</p>
+                <p className="text-xs md:text-sm font-bold text-gray-900 leading-snug">{feat.title}</p>
+                <p className="text-[10px] md:text-xs text-gray-600 mt-1 leading-normal">{feat.text}</p>
               </div>
             </motion.div>
           ))}

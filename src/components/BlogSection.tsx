@@ -51,8 +51,8 @@ export default function BlogSection() {
           </p>
         </motion.div>
 
-        {/* Blog grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Blog grid — 2-col on mobile, 3-col on desktop */}
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
           {blogPosts.map((post, i) => (
             <motion.article
               key={post.id}
@@ -64,7 +64,7 @@ export default function BlogSection() {
               className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group cursor-pointer"
             >
               {/* Cover image / placeholder gradient */}
-              <div className={`relative h-52 bg-gradient-to-br ${placeholderColors[i % placeholderColors.length]} overflow-hidden`}>
+              <div className={`relative h-32 md:h-52 bg-gradient-to-br ${placeholderColors[i % placeholderColors.length]} overflow-hidden`}>
                 {/* Decorative pattern overlay */}
                 <div className="absolute inset-0 opacity-20">
                   <div className="absolute top-4 right-4 w-16 h-16 border-4 border-white rounded-full" />
@@ -79,7 +79,7 @@ export default function BlogSection() {
                 </div>
                 {/* Article icon */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <BookOpen className="w-16 h-16 text-white/30" />
+                  <BookOpen className="w-10 h-10 md:w-16 md:h-16 text-white/30" />
                 </div>
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -92,25 +92,25 @@ export default function BlogSection() {
               </div>
 
               {/* Card body */}
-              <div className="p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug group-hover:text-[#3f7215] transition-colors" style={{ fontFamily: 'Raleway, sans-serif' }}>
+              <div className="p-3.5 md:p-6">
+                <h3 className="text-xs md:text-lg font-bold text-gray-900 mb-1.5 md:mb-3 leading-snug group-hover:text-[#3f7215] transition-colors line-clamp-2" style={{ fontFamily: 'Raleway, sans-serif' }}>
                   {post.title}
                 </h3>
-                <p className="text-sm text-gray-600 leading-relaxed mb-4 line-clamp-3">
+                <p className="text-xs text-gray-600 leading-relaxed mb-3 md:mb-4 line-clamp-2 md:line-clamp-3 hidden md:block">
                   {post.excerpt}
                 </p>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
-                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                <div className="flex items-center justify-between pt-3 md:pt-4 border-t border-gray-100">
+                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                    <div className="w-5 h-5 md:w-6 md:h-6 bg-green-100 rounded-full flex items-center justify-center">
                       <span className="text-[#76c122] font-bold text-xs">{post.author.charAt(0)}</span>
                     </div>
-                    <span className="font-medium">{post.author}</span>
+                    <span className="font-medium hidden md:inline">{post.author}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                    <Calendar className="w-3.5 h-3.5" />
-                    <span>{formatDateAz(post.publishedAt)}</span>
+                  <div className="flex items-center gap-1 text-xs text-gray-400">
+                    <Calendar className="w-3 h-3 md:w-3.5 md:h-3.5" />
+                    <span className="hidden md:inline">{formatDateAz(post.publishedAt)}</span>
                   </div>
                 </div>
               </div>

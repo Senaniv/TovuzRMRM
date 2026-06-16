@@ -65,33 +65,33 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
-                className="flex flex-wrap gap-4"
+                className="flex flex-row space-x-2 w-full mt-4 md:flex-wrap md:gap-4 md:space-x-0 md:mt-0"
               >
                 <a
                   id="hero-appointment-btn"
                   href="https://wa.me/994993014444?text=Salam,%20klinikada%20qəbula%20yazılmaq%20istəyirəm."
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center btn-primary px-8 py-4 rounded-full text-base font-bold shadow-lg text-white hover:scale-105 transition-transform cursor-pointer"
+                  className="inline-flex items-center justify-center btn-primary px-5 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base font-bold shadow-lg text-white hover:scale-105 transition-transform cursor-pointer flex-1 md:flex-none"
                   style={{ background: 'linear-gradient(135deg, #76c122, #5fa010)' }}
                 >
                   {h.ctaPrimary}
-                  <ChevronRight className="w-5 h-5 ml-1.5" />
+                  <ChevronRight className="w-4 h-4 ml-1 md:w-5 md:h-5 md:ml-1.5" />
                 </a>
                 <a
                   href="#services"
-                  className="inline-flex items-center justify-center px-8 py-4 rounded-full text-base font-bold border-2 border-[#76c122] text-[#3f7215] hover:bg-green-50 transition-all duration-200"
+                  className="inline-flex items-center justify-center px-5 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base font-bold border-2 border-[#76c122] text-[#3f7215] hover:bg-green-50 transition-all duration-200 flex-1 md:flex-none"
                 >
                   {h.ctaSecondary}
                 </a>
               </motion.div>
 
-              {/* Stats & Trust row */}
+              {/* Stats & Trust row — hidden on mobile */}
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
-                className="flex flex-wrap items-center gap-6 pt-4 border-t border-gray-100"
+                className="hidden md:flex flex-wrap items-center gap-6 pt-4 border-t border-gray-100"
               >
                 <a href="#doctors" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                   <div className="flex -space-x-2.5">
