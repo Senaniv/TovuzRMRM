@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = 'force-dynamic';
+
 async function getSiteContent() {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
