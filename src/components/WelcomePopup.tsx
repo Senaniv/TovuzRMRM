@@ -4,13 +4,20 @@ import React, { useState, useEffect } from 'react';
 import { useSiteContent } from '@/lib/siteContent';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 export default function WelcomePopup() {
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith('/admin');
   const { popupData } = useSiteContent();
   const [isOpen, setIsOpen] = useState(true);
   const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
+    if (isAdmin) {
+      setShouldRender(false);
+      return;
+    }
     if (!popupData || !popupData.is_active || !popupData.image_url) {
       setShouldRender(false);
       return;
@@ -31,9 +38,9 @@ export default function WelcomePopup() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [popupData]);
+  }, [popupData, isAdmin]);
 
-  if (!shouldRender || !isOpen) {
+  if (isAdmin || !shouldRender || !isOpen) {
     return null;
   }
 
