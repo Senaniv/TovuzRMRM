@@ -64,22 +64,33 @@ export default function BlogSection() {
               className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group cursor-pointer"
             >
               {/* Cover image / placeholder gradient */}
-              <div className={`relative h-32 md:h-52 bg-gradient-to-br ${placeholderColors[i % placeholderColors.length]} overflow-hidden`}>
-                {/* Decorative pattern overlay */}
-                <div className="absolute inset-0 opacity-20">
-                  <div className="absolute top-4 right-4 w-16 h-16 border-4 border-white rounded-full" />
-                  <div className="absolute bottom-4 left-4 w-24 h-1 bg-white rounded" />
-                  <div className="absolute bottom-8 left-4 w-16 h-1 bg-white rounded" />
-                </div>
+              <div className="relative h-32 md:h-52 bg-gray-100 overflow-hidden">
+                {post.coverImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={post.coverImage}
+                    alt={post.title}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className={`absolute inset-0 bg-gradient-to-br ${placeholderColors[i % placeholderColors.length]}`}>
+                    {/* Decorative pattern overlay */}
+                    <div className="absolute inset-0 opacity-20">
+                      <div className="absolute top-4 right-4 w-16 h-16 border-4 border-white rounded-full" />
+                      <div className="absolute bottom-4 left-4 w-24 h-1 bg-white rounded" />
+                      <div className="absolute bottom-8 left-4 w-16 h-1 bg-white rounded" />
+                    </div>
+                    {/* Article icon */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <BookOpen className="w-10 h-10 md:w-16 md:h-16 text-white/30" />
+                    </div>
+                  </div>
+                )}
                 {/* Category badge */}
-                <div className="absolute top-4 left-4">
+                <div className="absolute top-4 left-4 z-10">
                   <span className={`text-xs font-semibold px-3 py-1.5 rounded-full ${categoryColors[post.category] || 'bg-green-100 text-green-700'}`}>
                     {post.category}
                   </span>
-                </div>
-                {/* Article icon */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <BookOpen className="w-10 h-10 md:w-16 md:h-16 text-white/30" />
                 </div>
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />

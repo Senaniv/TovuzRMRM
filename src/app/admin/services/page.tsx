@@ -11,31 +11,56 @@ import { Badge } from '@/components/ui/badge';
 import { useSiteContent } from '@/lib/siteContent';
 import { Service } from '@/lib/types';
 
+function getIconForCategory(category: string): string {
+  const cat = (category || '').toLowerCase().trim();
+  if (cat.includes('nevro')) return 'Brain';
+  if (cat.includes('reabil') || cat.includes('fizik') || cat.includes('idman')) return 'Activity';
+  if (cat.includes('pediat') || cat.includes('uşaq')) return 'Baby';
+  if (cat.includes('diaq') || cat.includes('labor')) return 'Stethoscope';
+  if (cat.includes('kosmet') || cat.includes('derm') || cat.includes('gözəl')) return 'Sparkles';
+  if (cat.includes('psix') || cat.includes('loqo')) return 'HeartHandshake';
+  return 'Activity';
+}
+
+function getColorAccentForCategory(category: string): string {
+  const cat = (category || '').toLowerCase().trim();
+  if (cat.includes('nevro')) return 'bg-violet-50 border-violet-200';
+  if (cat.includes('reabil') || cat.includes('fizik')) return 'bg-blue-50 border-blue-200';
+  if (cat.includes('pediat') || cat.includes('uşaq')) return 'bg-pink-50 border-pink-200';
+  if (cat.includes('diaq') || cat.includes('labor')) return 'bg-green-50 border-green-200';
+  if (cat.includes('kosmet') || cat.includes('derm')) return 'bg-orange-50 border-orange-200';
+  return 'bg-blue-50 border-blue-200';
+}
+
 export default function AdminServices() {
   const { services: list, saveService, deleteService } = useSiteContent();
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Service | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [form, setForm] = useState<Partial<Service & { subItemsText: string }>>({});
+  const [form, setForm] = useState<Partial<Service>>({});
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ name: '', description: '', icon: 'Brain', category: '', colorAccent: '', subItemsText: '', orderIndex: list.length + 1 });
+    setForm({ name: '', description: '', icon: 'Brain', category: '', colorAccent: '', orderIndex: list.length + 1 });
     setModalOpen(true);
   };
 
   const openEdit = (svc: Service) => {
     setEditing(svc);
-    setForm({ ...svc, subItemsText: svc.subItems.join('\n') });
+    setForm({ ...svc });
     setModalOpen(true);
   };
 
   const handleSave = () => {
-    const subItems = (form.subItemsText || '').split('\n').filter(Boolean);
+    const category = form.category || '';
+    const icon = getIconForCategory(category);
+    const colorAccent = getColorAccentForCategory(category);
+    const updatedForm = { ...form, icon, colorAccent, subItems: [] };
+
     if (editing) {
-      saveService({ ...editing, ...form, subItems } as Service);
+      saveService({ ...editing, ...updatedForm } as Service);
     } else {
-      saveService({ ...form, id: Date.now().toString(), subItems } as Service);
+      saveService({ ...updatedForm, id: Date.now().toString() } as Service);
     }
     setModalOpen(false);
   };
@@ -65,7 +90,6 @@ export default function AdminServices() {
               <tr className="bg-gray-50 border-b border-gray-100">
                 <th className="text-left px-5 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Xidmət</th>
                 <th className="text-left px-5 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Kateqoriya</th>
-                <th className="text-left px-5 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Alt Xidmətlər</th>
                 <th className="text-right px-5 py-3.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Əməliyyat</th>
               </tr>
             </thead>
@@ -78,9 +102,6 @@ export default function AdminServices() {
                   </td>
                   <td className="px-5 py-4">
                     <Badge className="text-xs border-0 bg-green-100 text-[#3f7215]">{svc.category}</Badge>
-                  </td>
-                  <td className="px-5 py-4 hidden md:table-cell">
-                    <p className="text-xs text-gray-500">{svc.subItems.slice(0, 2).join(', ')}{svc.subItems.length > 2 ? '...' : ''}</p>
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center justify-end gap-2">
@@ -109,7 +130,6 @@ export default function AdminServices() {
             {[
               { id: 'name', label: 'Ad', placeholder: 'Xidmət adı' },
               { id: 'category', label: 'Kateqoriya', placeholder: 'Nevrologiya' },
-              { id: 'icon', label: 'İkon (Lucide)', placeholder: 'Brain' },
             ].map(f => (
               <div key={f.id}>
                 <Label className="text-xs font-semibold text-gray-600 mb-1.5 block">{f.label}</Label>
@@ -129,16 +149,6 @@ export default function AdminServices() {
                 onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
                 rows={2}
                 className="rounded-xl border-gray-200 focus:border-[#76c122] resize-none text-sm"
-              />
-            </div>
-            <div>
-              <Label className="text-xs font-semibold text-gray-600 mb-1.5 block">Alt Xidmətlər (hər biri yeni sətirdə)</Label>
-              <Textarea
-                placeholder="EEQ&#10;EMQ&#10;Neyrofeedback"
-                value={form.subItemsText || ''}
-                onChange={e => setForm(p => ({ ...p, subItemsText: e.target.value }))}
-                rows={4}
-                className="rounded-xl border-gray-200 focus:border-[#76c122] resize-none text-sm font-mono"
               />
             </div>
           </div>

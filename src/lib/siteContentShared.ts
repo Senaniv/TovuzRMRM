@@ -298,7 +298,7 @@ export function mapDbBlogPost(dbBlog: any): BlogPost {
     slug: dbBlog.slug || '',
     excerpt: dbBlog.excerpt || '',
     coverImage: dbBlog.image_url || '',
-    content: extra.content || dbBlog.content || '',
+    content: (extra && typeof extra.content === 'string') ? extra.content : (dbBlog.content || ''),
     author: extra.author || '',
     category: extra.category || '',
     publishedAt: extra.publishedAt || dbBlog.created_at?.split('T')[0] || new Date().toISOString().split('T')[0],

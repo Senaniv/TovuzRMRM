@@ -34,10 +34,14 @@ export default function AdminBlog() {
 
   const handleSave = () => {
     const slug = form.slug || form.title?.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || '';
+    const contentText = form.content || '';
+    const excerpt = contentText.length > 150 ? contentText.slice(0, 150) + '...' : contentText;
+    const updatedForm = { ...form, excerpt };
+
     if (editing) {
-      saveBlogPost({ ...editing, ...form, slug } as BlogPost);
+      saveBlogPost({ ...editing, ...updatedForm, slug } as BlogPost);
     } else {
-      saveBlogPost({ ...form, id: Date.now().toString(), slug, createdAt: new Date().toISOString() } as BlogPost);
+      saveBlogPost({ ...updatedForm, id: Date.now().toString(), slug, createdAt: new Date().toISOString() } as BlogPost);
     }
     setModalOpen(false);
   };
@@ -172,16 +176,7 @@ export default function AdminBlog() {
               />
               {isUploadingImage && <p className="text-xs text-[#76c122] mt-1">Şəkil yüklənir...</p>}
             </div>
-            <div>
-              <Label className="text-xs font-semibold text-gray-600 mb-1.5 block">Xülasə</Label>
-              <Textarea
-                placeholder="Məqalənin qısa xülasəsi..."
-                value={form.excerpt || ''}
-                onChange={e => setForm(p => ({ ...p, excerpt: e.target.value }))}
-                rows={3}
-                className="rounded-xl border-gray-200 focus:border-[#76c122] resize-none text-sm"
-              />
-            </div>
+
             <div>
               <Label className="text-xs font-semibold text-gray-600 mb-1.5 block">Məzmun</Label>
               <Textarea
