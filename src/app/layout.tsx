@@ -16,6 +16,11 @@ export const metadata: Metadata = {
     description: 'Müasir tibb texnologiyaları ilə kompleks reabilitasiya xidmətləri.',
     type: 'website',
   },
+  icons: {
+    icon: 'https://enlfoeazfhrrdwgbqbpx.supabase.co/storage/v1/object/public/rehab-media/logo.png',
+    shortcut: 'https://enlfoeazfhrrdwgbqbpx.supabase.co/storage/v1/object/public/rehab-media/logo.png',
+    apple: 'https://enlfoeazfhrrdwgbqbpx.supabase.co/storage/v1/object/public/rehab-media/logo.png',
+  },
 };
 
 export const dynamic = 'force-dynamic';
@@ -153,6 +158,7 @@ export default async function RootLayout({
   return (
     <html lang="az" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="https://enlfoeazfhrrdwgbqbpx.supabase.co/storage/v1/object/public/rehab-media/logo.png" type="image/png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
