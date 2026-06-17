@@ -50,11 +50,11 @@ export default function ReviewsSection() {
             onMouseEnter={() => emblaApi?.plugins().autoplay?.stop()}
             onMouseLeave={() => emblaApi?.plugins().autoplay?.play()}
           >
-            <div className="flex gap-6 lg:gap-8">
+            <div className="flex -mx-3 lg:-mx-4">
               {r.list.map((review) => (
                 <div
                   key={review.id}
-                  className="flex-[0_0_100%] sm:flex-[0_0_calc(50%-12px)] lg:flex-[0_0_calc(33.3333%-16px)] min-w-0 flex flex-col flex-shrink-0"
+                  className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.3333%] min-w-0 px-3 lg:px-4 flex flex-col flex-shrink-0"
                 >
                   <div className="bg-white rounded-3xl border border-gray-100/50 p-8 shadow-[0_8px_30px_-5px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_-10px_rgba(118,193,34,0.08)] transition-all duration-300 flex flex-col justify-between h-full group cursor-pointer hover:-translate-y-1">
                     <div className="space-y-5">

@@ -51,11 +51,11 @@ export default function DoctorsCarousel() {
               onMouseEnter={() => emblaApi?.plugins().autoplay?.stop()}
               onMouseLeave={() => emblaApi?.plugins().autoplay?.play()}
             >
-              <div className="flex gap-6 lg:gap-8">
+              <div className="flex -mx-3 lg:-mx-4">
                 {doctors.map((doctor) => (
                   <div
                     key={doctor.id}
-                    className="flex-[0_0_100%] sm:flex-[0_0_calc(50%-12px)] lg:flex-[0_0_calc(33.3333%-16px)] min-w-0 flex flex-col items-center flex-shrink-0"
+                    className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.3333%] min-w-0 px-3 lg:px-4 flex flex-col items-center flex-shrink-0"
                   >
                     <div className="w-full flex flex-col items-center text-center group">
                       {/* Capsule/Oval shape for Doctor Image */}
