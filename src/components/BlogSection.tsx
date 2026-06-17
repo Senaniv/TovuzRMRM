@@ -54,7 +54,7 @@ export default function BlogSection() {
 
         {/* Blog grid — 2-col on mobile, 3-col on desktop */}
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
-          {blogPosts.map((post, i) => (
+          {blogPosts.slice(0, 3).map((post, i) => (
             <motion.article
               key={post.id}
               initial={{ opacity: 0, y: 30 }}
@@ -140,10 +140,10 @@ export default function BlogSection() {
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
         >
-          <button className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold border-2 border-[#76c122] text-[#3f7215] hover:bg-green-50 transition-all">
+          <Link href="/blog" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold border-2 border-[#76c122] text-[#3f7215] hover:bg-green-50 transition-all">
             {b.ctaButton}
             <ArrowRight className="w-4 h-4" />
-          </button>
+          </Link>
         </motion.div>
       </div>
     </section>
