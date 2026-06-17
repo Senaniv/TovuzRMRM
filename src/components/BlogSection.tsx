@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Calendar, ArrowRight, BookOpen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useSiteContent } from '@/lib/siteContent';
+import Link from 'next/link';
 
 const AZ_MONTHS = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avqust', 'sentyabr', 'oktyabr', 'noyabr', 'dekabr'];
 
@@ -63,6 +64,7 @@ export default function BlogSection() {
               whileHover={{ y: -6 }}
               className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group cursor-pointer"
             >
+              <Link href={`/blog/${post.slug}`} className="block h-full">
               {/* Cover image / placeholder gradient */}
               <div className="relative h-32 md:h-52 bg-gray-100 overflow-hidden">
                 {post.coverImage ? (
@@ -125,7 +127,8 @@ export default function BlogSection() {
                   </div>
                 </div>
               </div>
-            </motion.article>
+            </Link>
+          </motion.article>
           ))}
         </div>
 

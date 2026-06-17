@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Brain, Activity, Baby, HeartHandshake, Microscope, Sparkles, ArrowRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useSiteContent } from '@/lib/siteContent';
+import Link from 'next/link';
 
 const iconMap: Record<string, React.ReactNode> = {
   Brain: <Brain className="w-6 h-6 text-[#76c122] group-hover:text-[#3f7215] transition-colors duration-300" />,
@@ -71,10 +72,10 @@ export default function ServicesGrid() {
 
 
                 {/* View Details Link */}
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#76c122] group-hover:text-[#3f7215] mt-auto transition-colors group-hover:underline">
+                <Link href={`/services/${service.id}`} className="inline-flex items-center gap-1.5 text-xs font-bold text-[#76c122] group-hover:text-[#3f7215] mt-auto transition-colors group-hover:underline">
                   Ətraflı
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                </span>
+                </Link>
 
                 {/* Small Category tag */}
                 <div className="absolute top-4 right-4 bg-gray-50 group-hover:bg-white group-hover:text-[#3f7215] text-[10px] text-gray-500 font-semibold px-2.5 py-1 rounded-full border border-gray-100/50 transition-colors duration-300">
