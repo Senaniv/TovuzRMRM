@@ -56,7 +56,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#f8f9fa] pt-32 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         {/* Back Button */}
         <Link

@@ -7,6 +7,7 @@ import { Phone, Menu, X, ChevronRight, MapPin, Mail, User, Instagram, MessageCir
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useSiteContent } from '@/lib/siteContent';
+import { usePathname } from 'next/navigation';
 
 const navLinks = [
   { label: 'Haqqımızda', href: '#about' },
@@ -17,6 +18,8 @@ const navLinks = [
 ];
 
 export default function Header() {
+  const pathname = usePathname();
+  const isHome = pathname === '/';
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { content } = useSiteContent();
@@ -71,7 +74,7 @@ export default function Header() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-18 py-3">
               {/* Logo */}
-              <a href="#hero" className="flex items-center gap-3 group">
+              <Link href="/" className="flex items-center gap-3 group">
                 <div className="relative w-11 h-11 flex-shrink-0">
                   <Image src="/logo.png" alt="Logo" fill className="object-contain" />
                 </div>
@@ -88,14 +91,14 @@ export default function Header() {
                     Reabilitasiya Mərkəzi
                   </span>
                 </div>
-              </a>
+              </Link>
 
               {/* Desktop Nav */}
               <nav className="hidden lg:flex items-center gap-1">
                 {navLinks.map(link => (
                   <a
                     key={link.href}
-                    href={link.href}
+                    href={isHome ? link.href : `/${link.href}`}
                     className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-[#76c122] rounded-full hover:bg-green-50 transition-all duration-200"
                   >
                     {link.label}
@@ -138,8 +141,8 @@ export default function Header() {
                   />
                   <SheetContent side="right" className="w-72">
                     <div className="flex flex-col gap-4 mt-8">
-                      <a
-                        href="#hero"
+                      <Link
+                        href="/"
                         onClick={() => setMobileOpen(false)}
                         className="flex items-center gap-3 pb-4 border-b border-green-100 group"
                       >
@@ -150,11 +153,11 @@ export default function Header() {
                           <p className="text-xs font-bold text-[#3f7215]">Regional Müalicə və</p>
                           <p className="text-xs font-bold text-[#3f7215]">Reabilitasiya Mərkəzi</p>
                         </div>
-                      </a>
+                      </Link>
                       {navLinks.map(link => (
                         <a
                           key={link.href}
-                          href={link.href}
+                          href={isHome ? link.href : `/${link.href}`}
                           onClick={() => setMobileOpen(false)}
                           className="flex items-center gap-2 px-3 py-2.5 text-gray-700 hover:text-[#76c122] hover:bg-green-50 rounded-lg font-medium transition-all"
                         >
