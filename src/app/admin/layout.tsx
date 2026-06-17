@@ -5,7 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  LayoutDashboard, Users, Briefcase, BookOpen, Calendar,
+  LayoutDashboard, Users, Briefcase, BookOpen,
   LogOut, Menu, X, ChevronRight, FileText, MessageSquare, Megaphone
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,6 @@ const navItems = [
   { href: '/admin/services', label: 'Xidmətlər', icon: Briefcase },
   { href: '/admin/blog', label: 'Bloq', icon: BookOpen },
   { href: '/admin/reviews', label: 'Rəylər', icon: MessageSquare },
-  { href: '/admin/appointments', label: 'Qeydiyyatlar', icon: Calendar },
   { href: '/admin/popup', label: 'Qarşılama Ekranı', icon: Megaphone },
 ];
 

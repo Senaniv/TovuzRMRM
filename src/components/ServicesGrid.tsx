@@ -69,14 +69,6 @@ export default function ServicesGrid() {
                   {service.description}
                 </p>
 
-                {/* Sub-items (Hidden/Small centered display or link) */}
-                <div className="flex flex-wrap justify-center gap-1.5 mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 absolute bottom-14 bg-white/95 px-4 py-2 rounded-xl shadow-md border border-gray-100 pointer-events-none">
-                  {service.subItems.slice(0, 2).map((item, j) => (
-                    <span key={j} className="text-[10px] font-semibold text-[#3f7215] bg-[#f4fae8] px-2 py-1 rounded-full">
-                      {item}
-                    </span>
-                  ))}
-                </div>
 
                 {/* View Details Link */}
                 <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#76c122] group-hover:text-[#3f7215] mt-auto transition-colors group-hover:underline">

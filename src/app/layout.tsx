@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import FloatingWhatsApp from '@/components/FloatingWhatsApp';
-import WelcomePopup from '@/components/WelcomePopup';
+import ConditionalLayout from '@/components/ConditionalLayout';
 import { SiteContentProvider } from '@/lib/siteContent';
 import { defaultContent, deepMerge, mapDbDoctor, mapDbService, mapDbBlogPost, defaultPopupData } from '@/lib/siteContentShared';
 import { supabase } from '@/lib/supabase';
@@ -171,11 +168,7 @@ export default async function RootLayout({
           initialBlogPosts={blogPosts}
           initialPopupData={popupData}
         >
-          <Header />
-          <main>{children}</main>
-          <Footer />
-          <FloatingWhatsApp />
-          <WelcomePopup />
+          <ConditionalLayout>{children}</ConditionalLayout>
         </SiteContentProvider>
       </body>
     </html>
