@@ -13,10 +13,38 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-[92vh] lg:min-h-[95vh] flex items-center pt-28 pb-0 overflow-hidden bg-gradient-to-br from-[#f4fae8] via-[#eaf7e2] to-[#ffffff] border-b border-gray-100"
+      className="relative min-h-[90vh] lg:min-h-[95vh] flex items-center pt-28 pb-12 lg:pb-0 overflow-hidden bg-white border-b border-gray-100"
     >
-      {/* Hexagonal grid pattern in background */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.06] text-[#76c122] z-0">
+      {/* RIGHT: Doctor Image - fills the background on the right */}
+      <div className="absolute top-0 right-0 w-full lg:w-[55%] h-full z-0 opacity-40 lg:opacity-100">
+        <Image
+          src={h.imageUrl || '/doctor-1.png'}
+          alt="Doctor Hero"
+          fill
+          className="object-cover object-center lg:object-left-top select-none"
+          priority
+          unoptimized
+        />
+      </div>
+
+      {/* MOBILE Gradient Overlay (Top to Bottom) */}
+      <div 
+        className="absolute inset-0 z-10 pointer-events-none lg:hidden"
+        style={{
+          background: 'linear-gradient(180deg, #f4fae8 0%, rgba(244, 250, 232, 0.98) 45%, rgba(244, 250, 232, 0.9) 65%, rgba(244, 250, 232, 0.3) 100%)'
+        }}
+      />
+      
+      {/* DESKTOP Gradient Overlay (Left to Right) */}
+      <div 
+        className="hidden lg:block absolute inset-0 z-10 pointer-events-none"
+        style={{
+          background: 'linear-gradient(90deg, #f4fae8 0%, #f4fae8 38%, rgba(244, 250, 232, 0.95) 48%, rgba(244, 250, 232, 0.75) 58%, rgba(244, 250, 232, 0) 100%)'
+        }}
+      />
+
+      {/* Hexagonal grid pattern - layered on top of gradient, left-aligned */}
+      <div className="absolute inset-y-0 left-0 w-full lg:w-[50%] pointer-events-none opacity-[0.06] text-[#76c122] z-20">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="hex-grid" width="56" height="97" patternUnits="userSpaceOnUse" patternTransform="scale(1.2)">
@@ -34,14 +62,10 @@ export default function Hero() {
         </svg>
       </div>
 
-      {/* Decorative Blur Blobs */}
-      <div className="absolute top-1/4 right-0 w-[450px] h-[450px] bg-[#76c122]/10 rounded-full blur-3xl opacity-60 pointer-events-none z-0" />
-      <div className="absolute bottom-10 left-10 w-96 h-96 bg-green-100/30 rounded-full blur-3xl opacity-50 pointer-events-none z-0" />
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-30 pt-12 lg:pt-16">
+        <div className="grid lg:grid-cols-12 gap-8 items-center">
           {/* LEFT: Text Content */}
-          <div className="lg:col-span-7 space-y-6 sm:space-y-7 text-left pt-8 pb-12 lg:pb-24">
+          <div className="lg:col-span-7 space-y-6 sm:space-y-7 text-left pb-8 lg:pb-24 max-w-2xl">
             {/* Badge */}
             {h.badge && (
               <motion.div
@@ -112,7 +136,7 @@ export default function Hero() {
               </a>
               <a
                 href="#services"
-                className="inline-flex items-center justify-center px-5 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base font-bold border-2 border-[#76c122] text-[#3f7215] hover:bg-green-50/50 transition-all duration-200 flex-1 md:flex-none bg-white/40"
+                className="inline-flex items-center justify-center px-5 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base font-bold border-2 border-[#76c122] text-[#3f7215] hover:bg-green-50/50 transition-all duration-200 flex-1 md:flex-none bg-white/60"
               >
                 {h.ctaSecondary}
               </a>
@@ -155,34 +179,11 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* RIGHT: Doctor Image (aligned at bottom on desktop) */}
-          <motion.div
-            className="lg:col-span-5 relative flex items-end justify-center lg:justify-end h-[350px] sm:h-[450px] lg:h-[580px] w-full self-end pointer-events-none"
-            initial={{ opacity: 0, y: 55 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-          >
-            {/* Subtle glow background for doctor */}
-            <div className="absolute w-[280px] h-[280px] sm:w-[380px] sm:h-[380px] bg-gradient-to-tr from-[#76c122]/10 to-transparent rounded-full blur-2xl -z-10 bottom-10" />
-
-            <div className="relative w-full h-full max-w-[320px] sm:max-w-[400px] lg:max-w-none flex items-end justify-center lg:justify-end">
-              <Image
-                src={h.imageUrl || '/doctor-1.png'}
-                alt="Doctor Hero"
-                fill
-                className="object-contain object-bottom scale-105 select-none"
-                priority
-                unoptimized
-              />
-              
-              {/* Subtle bottom fade to blend with section background */}
-              <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#ffffff] to-transparent pointer-events-none lg:hidden" />
-            </div>
-
-            {/* Optional Floating badging configured via content editor (only on lg screen sizes) */}
+          {/* Optional Floating items on desktop */}
+          <div className="hidden lg:block absolute bottom-12 right-12 z-30 space-y-3 pointer-events-none">
             {h.floatingBadge1 && (
               <motion.div
-                className="hidden lg:flex absolute bottom-20 -left-6 bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-green-50/50 py-2.5 px-4 items-center gap-2.5 pointer-events-auto"
+                className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-green-50/50 py-2.5 px-4 flex items-center gap-2.5 pointer-events-auto"
                 animate={{ y: [0, 6, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               >
@@ -198,7 +199,7 @@ export default function Hero() {
 
             {h.floatingCard && (
               <motion.div
-                className="hidden lg:block absolute top-1/4 -right-2 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-green-50/50 p-3 max-w-[150px] pointer-events-auto"
+                className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-green-50/50 p-3 max-w-[160px] pointer-events-auto"
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
               >
@@ -209,7 +210,7 @@ export default function Hero() {
                 <p className="text-[9px] text-gray-500 font-medium leading-normal">{h.floatingCard}</p>
               </motion.div>
             )}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
