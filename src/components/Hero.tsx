@@ -16,12 +16,12 @@ export default function Hero() {
       className="relative min-h-[auto] lg:min-h-[95vh] flex items-center pt-24 lg:pt-32 pb-12 lg:pb-0 overflow-hidden bg-gradient-to-br from-[#f4fae8] via-[#eaf7e2] to-[#ffffff] border-b border-gray-100"
     >
       {/* RIGHT: Doctor Image - hidden on mobile, visible on desktop */}
-      <div className="hidden lg:block absolute top-0 right-0 w-[55%] h-full z-0">
+      <div className="hidden lg:block absolute inset-0 z-0">
         <Image
           src={h.imageUrl || '/doctor-1.png'}
           alt="Doctor Hero"
           fill
-          className="object-cover object-left-top select-none"
+          className="object-cover object-right select-none"
           priority
           unoptimized
         />
@@ -31,7 +31,7 @@ export default function Hero() {
       <div 
         className="hidden lg:block absolute inset-0 z-10 pointer-events-none"
         style={{
-          background: 'linear-gradient(90deg, #f4fae8 0%, #f4fae8 30%, rgba(244, 250, 232, 0.8) 42%, rgba(244, 250, 232, 0) 52%)'
+          background: 'linear-gradient(90deg, #f4fae8 0%, #f4fae8 35%, rgba(244, 250, 232, 0.9) 48%, rgba(244, 250, 232, 0.6) 60%, rgba(244, 250, 232, 0) 72%)'
         }}
       />
 
