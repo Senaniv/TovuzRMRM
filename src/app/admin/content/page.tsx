@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSiteContent, defaultContent, SiteContent } from '@/lib/siteContent';
+import { uploadImage, deleteImageByUrl } from '@/lib/supabase';
 
 // ─── Reusable Field Components ────────────────────────────────────────────────
 function Field({
@@ -214,6 +215,141 @@ function LogoUploadPanel() {
   );
 }
 
+// ─── Hero Image Upload Panel ──────────────────────────────────────────────────
+function HeroImageUploadPanel({
+  currentImage,
+  onImageChange,
+}: {
+  currentImage: string;
+  onImageChange: (url: string) => void;
+}) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = e => setPreview(e.target?.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  };
+
+  const handleUpload = async () => {
+    const file = fileRef.current?.files?.[0];
+    if (!file && !preview) return;
+    const inputFile = fileRef.current?.files?.[0];
+    if (!inputFile) {
+      setMessage({ type: 'error', text: 'Zəhmət olmasa fayl seçin' });
+      return;
+    }
+    setUploading(true);
+    setMessage(null);
+    try {
+      const url = await uploadImage(inputFile, 'hero');
+      onImageChange(url);
+      
+      if (currentImage && currentImage !== '/doctor-1.png' && currentImage.includes('supabase.co')) {
+        await deleteImageByUrl(currentImage);
+      }
+      
+      setMessage({ type: 'success', text: 'Hero şəkli uğurla yükləndi!' });
+      setPreview(null);
+      if (fileRef.current) fileRef.current.value = '';
+    } catch (err: any) {
+      setMessage({ type: 'error', text: err.message || 'Xəta baş verdi' });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Cari Hero Şəkli</p>
+        <div className="w-40 h-40 bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl flex items-center justify-center overflow-hidden relative">
+          <Image
+            src={preview || currentImage || '/doctor-1.png'}
+            alt="Hero image preview"
+            fill
+            className="object-contain"
+            unoptimized
+          />
+        </div>
+      </div>
+
+      <div
+        onDrop={handleDrop}
+        onDragOver={e => e.preventDefault()}
+        onClick={() => fileRef.current?.click()}
+        className="border-2 border-dashed border-gray-200 hover:border-[#76c122] rounded-2xl p-8 text-center cursor-pointer transition-colors group"
+      >
+        {preview ? (
+          <div className="flex flex-col items-center gap-3">
+            <p className="text-xs text-gray-500">Yeni şəkil seçildi. Yükləmək üçün aşağıdakı düyməni basın.</p>
+          </div>
+        ) : (
+          <>
+            <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
+              <ImageIcon className="w-6 h-6 text-[#76c122]" />
+            </div>
+            <p className="text-sm font-semibold text-gray-700 mb-1">Yeni hero şəklini buraya sürükləyin</p>
+            <p className="text-xs text-gray-400">və ya seçmək üçün klikləyin</p>
+            <p className="text-xs text-gray-400 mt-2">PNG, JPG, SVG, WebP — maks. 5MB</p>
+          </>
+        )}
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp"
+          className="hidden"
+          onChange={e => {
+            const f = e.target.files?.[0];
+            if (f) handleFile(f);
+          }}
+        />
+      </div>
+
+      {message && (
+        <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium ${
+          message.type === 'success'
+            ? 'bg-green-50 text-green-700 border border-green-100'
+            : 'bg-red-50 text-red-600 border border-red-100'
+        }`}>
+          {message.type === 'success'
+            ? <Check className="w-4 h-4 flex-shrink-0" />
+            : <AlertCircle className="w-4 h-4 flex-shrink-0" />}
+          {message.text}
+        </div>
+      )}
+
+      <Button
+        onClick={handleUpload}
+        disabled={uploading || !preview}
+        className="w-full py-2.5 rounded-xl font-semibold text-white disabled:opacity-50"
+        style={{ background: 'linear-gradient(135deg, #76c122, #5fa010)' }}
+      >
+        {uploading ? (
+          <span className="flex items-center gap-2">
+            <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            Yüklənir...
+          </span>
+        ) : (
+          <span className="flex items-center gap-2">
+            <Upload className="w-4 h-4" />
+            Şəkli Yüklə
+          </span>
+        )}
+      </Button>
+    </div>
+  );
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function ContentPage() {
   const { content, saveContent, resetContent, loaded } = useSiteContent();
@@ -313,6 +449,19 @@ export default function ContentPage() {
       {/* ── LOGO ──────────────────────────────────────────────── */}
       <SectionCard title="Loqo" icon={ImageIcon} defaultOpen={true}>
         <LogoUploadPanel />
+      </SectionCard>
+
+      {/* ── HERO IMAGE ────────────────────────────────────────── */}
+      <SectionCard title="Hero Şəkli (Əsas Ekran Rəsmi)" icon={ImageIcon} defaultOpen={true}>
+        <HeroImageUploadPanel
+          currentImage={draft.hero.imageUrl}
+          onImageChange={url => {
+            setDraft(prev => ({
+              ...prev,
+              hero: { ...prev.hero, imageUrl: url }
+            }));
+          }}
+        />
       </SectionCard>
 
       {/* ── HEADER ────────────────────────────────────────────── */}

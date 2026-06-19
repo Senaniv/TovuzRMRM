@@ -31,6 +31,7 @@ export interface SiteContent {
     floatingCard: string;
     floatingBadge1: string;
     floatingBadge2: string;
+    imageUrl: string;
   };
   about: {
     badge: string;
@@ -111,6 +112,7 @@ export const defaultContent: SiteContent = {
     floatingCard: 'Həkimlərimiz pasiyentlər tərəfindən yüksək qiymətləndirilir',
     floatingBadge1: 'Lisenziyalı',
     floatingBadge2: 'Səhiyyə Nazirliyi',
+    imageUrl: '/doctor-1.png',
   },
   about: {
     badge: 'Haqqımızda',

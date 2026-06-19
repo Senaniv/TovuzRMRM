@@ -1,10 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Star, Users, Award, ChevronRight, Phone } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Star, Award, ChevronRight } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useSiteContent } from '@/lib/siteContent';
 
@@ -13,44 +11,78 @@ export default function Hero() {
   const h = content.hero;
 
   return (
-    <>
-      <section id="hero" className="relative min-h-[90vh] lg:min-h-[95vh] flex items-center pt-32 pb-16 overflow-hidden bg-white">
-        {/* Soft background decorative blobs */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-green-50 rounded-full blur-3xl opacity-60 -translate-y-1/3 translate-x-1/4" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-green-50 rounded-full blur-3xl opacity-50 translate-y-1/4 -translate-x-1/4" />
+    <section
+      id="hero"
+      className="relative min-h-[92vh] lg:min-h-[95vh] flex items-center pt-28 pb-0 overflow-hidden bg-gradient-to-br from-[#f4fae8] via-[#eaf7e2] to-[#ffffff] border-b border-gray-100"
+    >
+      {/* Hexagonal grid pattern in background */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.06] text-[#76c122] z-0">
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="hex-grid" width="56" height="97" patternUnits="userSpaceOnUse" patternTransform="scale(1.2)">
+              <path d="M 28 0 L 56 16.16 L 56 48.5 L 28 64.66 L 0 48.5 L 0 16.16 Z" fill="none" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M 28 97 L 56 80.84 L 56 48.5 L 28 64.66 L 0 48.5 L 0 80.84 Z" fill="none" stroke="currentColor" strokeWidth="1.2" />
+              <circle cx="28" cy="0" r="2.5" fill="currentColor" />
+              <circle cx="56" cy="16.16" r="2.5" fill="currentColor" />
+              <circle cx="56" cy="48.5" r="2.5" fill="currentColor" />
+              <circle cx="28" cy="64.66" r="2.5" fill="currentColor" />
+              <circle cx="0" cy="48.5" r="2.5" fill="currentColor" />
+              <circle cx="0" cy="16.16" r="2.5" fill="currentColor" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#hex-grid)" />
+        </svg>
+      </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            {/* LEFT — Text content (7 columns on desktop) */}
-            <div className="lg:col-span-7 space-y-7 text-left">
-              {/* Badge */}
+      {/* Decorative Blur Blobs */}
+      <div className="absolute top-1/4 right-0 w-[450px] h-[450px] bg-[#76c122]/10 rounded-full blur-3xl opacity-60 pointer-events-none z-0" />
+      <div className="absolute bottom-10 left-10 w-96 h-96 bg-green-100/30 rounded-full blur-3xl opacity-50 pointer-events-none z-0" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* LEFT: Text Content */}
+          <div className="lg:col-span-7 space-y-6 sm:space-y-7 text-left pt-8 pb-12 lg:pb-24">
+            {/* Badge */}
+            {h.badge && (
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
                 <Badge
-                  className="px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold border-0"
-                  style={{ backgroundColor: '#f4fae8', color: '#3f7215' }}
+                  className="px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold border-0 tracking-wide"
+                  style={{ backgroundColor: '#eef9df', color: '#3f7215' }}
                 >
                   {h.badge}
                 </Badge>
               </motion.div>
+            )}
 
-              {/* Heading */}
-              <motion.h1
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-4xl sm:text-5xl lg:text-[58px] font-black leading-[1.15] text-gray-900 tracking-tight"
-                style={{ fontFamily: 'Raleway, sans-serif' }}
-              >
-                {h.heading1}<br />
-                <span className="text-gradient">{h.heading2}</span><br />
-                {h.heading3}
-              </motion.h1>
+            {/* Main Heading */}
+            <motion.h1
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="text-4.5xl sm:text-5.5xl lg:text-[58px] font-black leading-[1.12] text-gray-900 tracking-tight"
+              style={{ fontFamily: 'Raleway, sans-serif' }}
+            >
+              {h.heading1}
+              {h.heading2 && (
+                <>
+                  <br />
+                  <span className="text-gradient">{h.heading2}</span>
+                </>
+              )}
+              {h.heading3 && (
+                <>
+                  <br />
+                  <span>{h.heading3}</span>
+                </>
+              )}
+            </motion.h1>
 
-              {/* Subtitle */}
+            {/* Subtext */}
+            {h.subtext && (
               <motion.p
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -59,128 +91,127 @@ export default function Hero() {
               >
                 {h.subtext}
               </motion.p>
+            )}
 
-              {/* CTA Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="flex flex-row space-x-2 w-full mt-4 md:flex-wrap md:gap-4 md:space-x-0 md:mt-0"
-              >
-                <a
-                  id="hero-appointment-btn"
-                  href="https://wa.me/994993014444?text=Salam,%20klinikada%20qəbula%20yazılmaq%20istəyirəm."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center btn-primary px-5 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base font-bold shadow-lg text-white hover:scale-105 transition-transform cursor-pointer flex-1 md:flex-none"
-                  style={{ background: 'linear-gradient(135deg, #76c122, #5fa010)' }}
-                >
-                  {h.ctaPrimary}
-                  <ChevronRight className="w-4 h-4 ml-1 md:w-5 md:h-5 md:ml-1.5" />
-                </a>
-                <a
-                  href="#services"
-                  className="inline-flex items-center justify-center px-5 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base font-bold border-2 border-[#76c122] text-[#3f7215] hover:bg-green-50 transition-all duration-200 flex-1 md:flex-none"
-                >
-                  {h.ctaSecondary}
-                </a>
-              </motion.div>
-
-              {/* Stats & Trust row — hidden on mobile */}
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="hidden md:flex flex-wrap items-center gap-6 pt-4 border-t border-gray-100"
-              >
-                <a href="#doctors" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                  <div className="flex -space-x-2.5">
-                    {['/doctor-1.png', '/doctor-2.png', '/doctor-3.png'].map((src, i) => (
-                      <div key={i} className="w-9 h-9 rounded-full border-2 border-white overflow-hidden bg-gray-100 shadow-sm">
-                        <Image src={src} alt="Doctor avatar" width={36} height={36} className="object-cover w-full h-full" />
-                      </div>
-                    ))}
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-gray-900">{h.stat1Value} {h.stat1Label}</p>
-                    <p className="text-xs text-gray-500">Müasir reabilitasiya komandası</p>
-                  </div>
-                </a>
-
-                <div className="h-8 w-px bg-gray-200 hidden sm:block" />
-
-                <a href="#reviews" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                  <div className="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center">
-                    <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-gray-900">{h.stat2Value}</p>
-                    <p className="text-xs text-gray-500">{h.stat2Label}</p>
-                  </div>
-                </a>
-              </motion.div>
-            </div>
-
-            {/* RIGHT — Single doctor with circular glow backdrop (5 columns on desktop) */}
+            {/* CTA Buttons */}
             <motion.div
-              className="lg:col-span-5 relative flex justify-center items-center mt-10 lg:mt-0"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex flex-row space-x-3 w-full mt-4 md:flex-wrap md:gap-4 md:space-x-0"
             >
-              {/* Circular Background Glow Shape */}
-              <div className="absolute w-[320px] h-[320px] sm:w-[420px] sm:h-[420px] bg-gradient-to-tr from-[#76c122]/15 to-[#e8f5d4]/40 rounded-full blur-sm -z-10" />
-
-              {/* Secondary floating glow */}
-              <div className="absolute top-10 right-10 w-24 h-24 bg-[#76c122]/10 rounded-full blur-xl" />
-
-              {/* Main Doctor Image container */}
-              <div className="relative w-[280px] h-[360px] sm:w-[360px] sm:h-[460px] overflow-hidden rounded-2xl">
-                <Image
-                  src="/doctor-1.png"
-                  alt="Doctor Hero"
-                  fill
-                  className="object-contain object-bottom scale-105"
-                  priority
-                />
-              </div>
-
-              {/* Floating review card */}
-              <motion.div
-                className="absolute top-1/4 -left-6 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-green-50 p-3.5 max-w-[170px]"
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              <a
+                id="hero-appointment-btn"
+                href="https://wa.me/994993014444?text=Salam,%20klinikada%20qəbula%20yazılmaq%20istəyirəm."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center btn-primary px-5 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base font-bold shadow-lg text-white hover:scale-105 transition-transform cursor-pointer flex-1 md:flex-none"
               >
-                <div className="flex items-center gap-1.5 mb-1">
-                  <div className="flex gap-0.5">
-                    {[1, 2, 3, 4, 5].map(star => (
-                      <Star key={star} className="w-3 h-3 text-amber-400 fill-amber-400" />
-                    ))}
-                  </div>
-                  <span className="text-xs font-bold text-gray-800">5.0</span>
-                </div>
-                <p className="text-[10px] text-gray-500 font-medium">{h.floatingCard}</p>
-              </motion.div>
-
-              {/* Floating Stat card */}
-              <motion.div
-                className="absolute bottom-10 -right-6 bg-white/95 backdrop-blur-md rounded-full shadow-xl border border-green-50 py-3 px-5 flex items-center gap-3"
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                {h.ctaPrimary}
+                <ChevronRight className="w-4 h-4 ml-1 md:w-5 md:h-5 md:ml-1.5" />
+              </a>
+              <a
+                href="#services"
+                className="inline-flex items-center justify-center px-5 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base font-bold border-2 border-[#76c122] text-[#3f7215] hover:bg-green-50/50 transition-all duration-200 flex-1 md:flex-none bg-white/40"
               >
-                <div className="w-9 h-9 bg-green-100 rounded-full flex items-center justify-center">
-                  <Award className="w-5 h-5 text-[#76c122]" />
+                {h.ctaSecondary}
+              </a>
+            </motion.div>
+
+            {/* Stats Row */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="flex flex-wrap items-center gap-6 pt-6 border-t border-gray-200/50 max-w-xl"
+            >
+              {/* Stat 1 */}
+              <a href="#doctors" className="flex items-center gap-3 hover:opacity-85 transition-opacity">
+                <div className="flex -space-x-2.5">
+                  {['/doctor-1.png', '/doctor-2.png', '/doctor-3.png'].map((src, i) => (
+                    <div key={i} className="w-9 h-9 rounded-full border-2 border-white overflow-hidden bg-gray-100 shadow-sm relative">
+                      <Image src={src} alt="Doctor avatar" fill className="object-cover" />
+                    </div>
+                  ))}
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-gray-900 leading-tight">{h.floatingBadge1}</p>
-                  <p className="text-[10px] text-gray-500">{h.floatingBadge2}</p>
+                  <p className="text-sm font-bold text-gray-950 leading-tight">{h.stat1Value}</p>
+                  <p className="text-xs text-gray-500">{h.stat1Label}</p>
                 </div>
-              </motion.div>
+              </a>
+
+              <div className="h-8 w-px bg-gray-200/80 hidden sm:block" />
+
+              {/* Stat 2 */}
+              <a href="#reviews" className="flex items-center gap-2 hover:opacity-85 transition-opacity">
+                <div className="w-9 h-9 bg-amber-50 rounded-xl flex items-center justify-center">
+                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-gray-950 leading-tight">{h.stat2Value}</p>
+                  <p className="text-xs text-gray-500">{h.stat2Label}</p>
+                </div>
+              </a>
             </motion.div>
           </div>
-        </div>
-      </section>
 
-    </>
+          {/* RIGHT: Doctor Image (aligned at bottom on desktop) */}
+          <motion.div
+            className="lg:col-span-5 relative flex items-end justify-center lg:justify-end h-[350px] sm:h-[450px] lg:h-[580px] w-full self-end pointer-events-none"
+            initial={{ opacity: 0, y: 55 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+          >
+            {/* Subtle glow background for doctor */}
+            <div className="absolute w-[280px] h-[280px] sm:w-[380px] sm:h-[380px] bg-gradient-to-tr from-[#76c122]/10 to-transparent rounded-full blur-2xl -z-10 bottom-10" />
+
+            <div className="relative w-full h-full max-w-[320px] sm:max-w-[400px] lg:max-w-none flex items-end justify-center lg:justify-end">
+              <Image
+                src={h.imageUrl || '/doctor-1.png'}
+                alt="Doctor Hero"
+                fill
+                className="object-contain object-bottom scale-105 select-none"
+                priority
+                unoptimized
+              />
+              
+              {/* Subtle bottom fade to blend with section background */}
+              <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#ffffff] to-transparent pointer-events-none lg:hidden" />
+            </div>
+
+            {/* Optional Floating badging configured via content editor (only on lg screen sizes) */}
+            {h.floatingBadge1 && (
+              <motion.div
+                className="hidden lg:flex absolute bottom-20 -left-6 bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-green-50/50 py-2.5 px-4 items-center gap-2.5 pointer-events-auto"
+                animate={{ y: [0, 6, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <Award className="w-4 h-4 text-[#76c122]" />
+                </div>
+                <div>
+                  <p className="text-[11px] font-bold text-gray-900 leading-tight">{h.floatingBadge1}</p>
+                  <p className="text-[9px] text-gray-500">{h.floatingBadge2}</p>
+                </div>
+              </motion.div>
+            )}
+
+            {h.floatingCard && (
+              <motion.div
+                className="hidden lg:block absolute top-1/4 -right-2 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-green-50/50 p-3 max-w-[150px] pointer-events-auto"
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+              >
+                <div className="flex items-center gap-1 mb-1">
+                  <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                  <span className="text-[10px] font-bold text-gray-800">5.0</span>
+                </div>
+                <p className="text-[9px] text-gray-500 font-medium leading-normal">{h.floatingCard}</p>
+              </motion.div>
+            )}
+          </motion.div>
+        </div>
+      </div>
+    </section>
   );
 }
