@@ -13,33 +13,25 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-[90vh] lg:min-h-[95vh] flex items-center pt-28 pb-12 lg:pb-0 overflow-hidden bg-white border-b border-gray-100"
+      className="relative min-h-[auto] lg:min-h-[95vh] flex items-center pt-24 lg:pt-32 pb-12 lg:pb-0 overflow-hidden bg-gradient-to-br from-[#f4fae8] via-[#eaf7e2] to-[#ffffff] border-b border-gray-100"
     >
-      {/* RIGHT: Doctor Image - fills the background on the right */}
-      <div className="absolute top-0 right-0 w-full lg:w-[55%] h-full z-0 opacity-40 lg:opacity-100">
+      {/* RIGHT: Doctor Image - hidden on mobile, visible on desktop */}
+      <div className="hidden lg:block absolute top-0 right-0 w-[55%] h-full z-0">
         <Image
           src={h.imageUrl || '/doctor-1.png'}
           alt="Doctor Hero"
           fill
-          className="object-cover object-center lg:object-left-top select-none"
+          className="object-cover object-left-top select-none"
           priority
           unoptimized
         />
       </div>
-
-      {/* MOBILE Gradient Overlay (Top to Bottom) */}
-      <div 
-        className="absolute inset-0 z-10 pointer-events-none lg:hidden"
-        style={{
-          background: 'linear-gradient(180deg, #f4fae8 0%, rgba(244, 250, 232, 0.98) 45%, rgba(244, 250, 232, 0.9) 65%, rgba(244, 250, 232, 0.3) 100%)'
-        }}
-      />
       
-      {/* DESKTOP Gradient Overlay (Left to Right) */}
+      {/* DESKTOP Gradient Overlay (Left to Right) - Ensures doctor face is sharp and not blurred */}
       <div 
         className="hidden lg:block absolute inset-0 z-10 pointer-events-none"
         style={{
-          background: 'linear-gradient(90deg, #f4fae8 0%, #f4fae8 38%, rgba(244, 250, 232, 0.95) 48%, rgba(244, 250, 232, 0.75) 58%, rgba(244, 250, 232, 0) 100%)'
+          background: 'linear-gradient(90deg, #f4fae8 0%, #f4fae8 30%, rgba(244, 250, 232, 0.8) 42%, rgba(244, 250, 232, 0) 52%)'
         }}
       />
 
@@ -62,10 +54,10 @@ export default function Hero() {
         </svg>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-30 pt-12 lg:pt-16">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-30">
         <div className="grid lg:grid-cols-12 gap-8 items-center">
           {/* LEFT: Text Content */}
-          <div className="lg:col-span-7 space-y-6 sm:space-y-7 text-left pb-8 lg:pb-24 max-w-2xl">
+          <div className="lg:col-span-7 space-y-5 lg:space-y-7 text-left pb-4 lg:pb-24 max-w-2xl">
             {/* Badge */}
             {h.badge && (
               <motion.div
@@ -87,7 +79,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-4.5xl sm:text-5.5xl lg:text-[58px] font-black leading-[1.12] text-gray-900 tracking-tight"
+              className="text-4xl sm:text-5.5xl lg:text-[58px] font-black leading-[1.12] text-gray-900 tracking-tight"
               style={{ fontFamily: 'Raleway, sans-serif' }}
             >
               {h.heading1}
@@ -111,7 +103,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-gray-600 text-base sm:text-lg leading-relaxed max-w-xl"
+                className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed max-w-xl"
               >
                 {h.subtext}
               </motion.p>
@@ -129,25 +121,25 @@ export default function Hero() {
                 href="https://wa.me/994993014444?text=Salam,%20klinikada%20qəbula%20yazılmaq%20istəyirəm."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center btn-primary px-5 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base font-bold shadow-lg text-white hover:scale-105 transition-transform cursor-pointer flex-1 md:flex-none"
+                className="inline-flex items-center justify-center btn-primary px-5 py-3 md:px-8 md:py-4 rounded-full text-xs sm:text-sm md:text-base font-bold shadow-lg text-white hover:scale-105 transition-transform cursor-pointer flex-1 md:flex-none"
               >
                 {h.ctaPrimary}
                 <ChevronRight className="w-4 h-4 ml-1 md:w-5 md:h-5 md:ml-1.5" />
               </a>
               <a
                 href="#services"
-                className="inline-flex items-center justify-center px-5 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base font-bold border-2 border-[#76c122] text-[#3f7215] hover:bg-green-50/50 transition-all duration-200 flex-1 md:flex-none bg-white/60"
+                className="inline-flex items-center justify-center px-5 py-3 md:px-8 md:py-4 rounded-full text-xs sm:text-sm md:text-base font-bold border-2 border-[#76c122] text-[#3f7215] hover:bg-green-50/50 transition-all duration-200 flex-1 md:flex-none bg-white/60"
               >
                 {h.ctaSecondary}
               </a>
             </motion.div>
 
-            {/* Stats Row */}
+            {/* Stats Row - Hidden on Mobile, Shown on Desktop */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex flex-wrap items-center gap-6 pt-6 border-t border-gray-200/50 max-w-xl"
+              className="hidden lg:flex flex-wrap items-center gap-6 pt-6 border-t border-gray-200/50 max-w-xl"
             >
               {/* Stat 1 */}
               <a href="#doctors" className="flex items-center gap-3 hover:opacity-85 transition-opacity">
@@ -191,7 +183,7 @@ export default function Hero() {
                   <Award className="w-4 h-4 text-[#76c122]" />
                 </div>
                 <div>
-                  <p className="text-[11px] font-bold text-gray-900 leading-tight">{h.floatingBadge1}</p>
+                  <p className="text-[11px] font-bold text-gray-950 leading-tight">{h.floatingBadge1}</p>
                   <p className="text-[9px] text-gray-500">{h.floatingBadge2}</p>
                 </div>
               </motion.div>
