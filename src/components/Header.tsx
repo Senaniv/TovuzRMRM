@@ -40,16 +40,22 @@ export default function Header() {
         }`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <div className="flex items-center gap-6">
-              <span className="flex items-center gap-1.5 font-medium">
+              <a
+                href={`https://maps.google.com/?q=${encodeURIComponent(hdr.address + ' Tovuz')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 font-medium hover:text-[#76c122] transition-colors"
+              >
                 <MapPin className="w-3.5 h-3.5 text-[#76c122]" />
                 {hdr.address}
-              </span>
+              </a>
               <span className="flex items-center gap-1.5 font-medium">
                 <Mail className="w-3.5 h-3.5 text-[#76c122]" />
                 {hdr.email}
               </span>
             </div>
             <div className="flex items-center gap-3">
+              <span className="text-gray-400 font-medium text-[11px] mr-1">Bizi sosial mediada izləyin:</span>
               <a href="https://wa.me/994993014444" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#76c122] transition-colors">
                 <MessageCircle className="w-4 h-4" />
               </a>
