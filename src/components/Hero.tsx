@@ -15,23 +15,33 @@ export default function Hero() {
       id="hero"
       className="relative min-h-[auto] lg:min-h-[95vh] flex items-center pt-24 lg:pt-32 pb-12 lg:pb-0 overflow-hidden bg-gradient-to-br from-[#f4fae8] via-[#eaf7e2] to-[#ffffff] border-b border-gray-100"
     >
-      {/* RIGHT: Doctor Image - hidden on mobile, visible on desktop */}
-      <div 
-        className="hidden lg:block absolute top-0 right-0 w-[48%] h-full z-0 pointer-events-none"
-        style={{
-          maskImage: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 20%)',
-          WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 20%)'
-        }}
-      >
+      {/* Background Image - fills the background of the entire section */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
         <Image
           src={h.imageUrl || '/doctor-1.png'}
           alt="Doctor Hero"
           fill
-          className="object-cover object-center select-none"
+          className="object-cover object-right select-none"
           priority
           unoptimized
         />
       </div>
+
+      {/* MOBILE Gradient Overlay (Top to Bottom) */}
+      <div 
+        className="absolute inset-0 z-10 pointer-events-none lg:hidden"
+        style={{
+          background: 'linear-gradient(180deg, rgba(244, 250, 232, 0.98) 0%, rgba(244, 250, 232, 0.96) 50%, rgba(244, 250, 232, 0.85) 75%, rgba(244, 250, 232, 0.45) 100%)'
+        }}
+      />
+      
+      {/* DESKTOP Gradient Overlay (Left to Right) - Ensures doctor face is sharp and not blurred */}
+      <div 
+        className="hidden lg:block absolute inset-0 z-10 pointer-events-none"
+        style={{
+          background: 'linear-gradient(90deg, #f4fae8 0%, #f4fae8 35%, rgba(244, 250, 232, 0.9) 48%, rgba(244, 250, 232, 0.5) 62%, rgba(244, 250, 232, 0) 75%)'
+        }}
+      />
 
       {/* Hexagonal grid pattern - layered on top of gradient, left-aligned */}
       <div className="absolute inset-y-0 left-0 w-full lg:w-[50%] pointer-events-none opacity-[0.06] text-[#76c122] z-20">

@@ -228,51 +228,46 @@ function HeroImageUploadPanel({
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  const handleFile = (file: File) => {
+  const handleFile = async (file: File) => {
+    // 1. Show local preview
     const reader = new FileReader();
     reader.onload = e => setPreview(e.target?.result as string);
     reader.readAsDataURL(file);
-  };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file) handleFile(file);
-  };
-
-  const handleUpload = async () => {
-    const file = fileRef.current?.files?.[0];
-    if (!file && !preview) return;
-    const inputFile = fileRef.current?.files?.[0];
-    if (!inputFile) {
-      setMessage({ type: 'error', text: 'Zəhmət olmasa fayl seçin' });
-      return;
-    }
+    // 2. Perform automatic upload
     setUploading(true);
     setMessage(null);
     try {
-      const url = await uploadImage(inputFile, 'hero');
+      const url = await uploadImage(file, 'hero');
       onImageChange(url);
       
       if (currentImage && currentImage !== '/doctor-1.png' && currentImage.includes('supabase.co')) {
         await deleteImageByUrl(currentImage);
       }
       
-      setMessage({ type: 'success', text: 'Hero şəkli uğurla yükləndi!' });
+      setMessage({ type: 'success', text: 'Şəkil uğurla yükləndi! Dəyişiklikləri tamamlamaq üçün aşağıdakı "Saxla" düyməsinə klikləyin.' });
       setPreview(null);
-      if (fileRef.current) fileRef.current.value = '';
     } catch (err: any) {
-      setMessage({ type: 'error', text: err.message || 'Xəta baş verdi' });
+      setMessage({ type: 'error', text: err.message || 'Şəkil yüklənərkən xəta baş verdi' });
+      setPreview(null);
     } finally {
       setUploading(false);
+      if (fileRef.current) fileRef.current.value = '';
     }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (uploading) return;
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
   };
 
   return (
     <div className="space-y-4">
       <div>
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Cari Hero Şəkli</p>
-        <div className="w-40 h-40 bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl flex items-center justify-center overflow-hidden relative">
+        <div className="w-full max-w-md h-48 bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl flex items-center justify-center overflow-hidden relative">
           <Image
             src={preview || currentImage || '/doctor-1.png'}
             alt="Hero image preview"
@@ -280,34 +275,35 @@ function HeroImageUploadPanel({
             className="object-contain"
             unoptimized
           />
+          {uploading && (
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-xs flex flex-col items-center justify-center text-white gap-2 z-10">
+              <span className="w-8 h-8 border-3 border-white border-t-transparent rounded-full animate-spin" />
+              <span className="text-xs font-bold">Şəkil yüklənir...</span>
+            </div>
+          )}
         </div>
       </div>
 
       <div
         onDrop={handleDrop}
         onDragOver={e => e.preventDefault()}
-        onClick={() => fileRef.current?.click()}
-        className="border-2 border-dashed border-gray-200 hover:border-[#76c122] rounded-2xl p-8 text-center cursor-pointer transition-colors group"
+        onClick={() => { if (!uploading) fileRef.current?.click(); }}
+        className={`border-2 border-dashed border-gray-200 hover:border-[#76c122] rounded-2xl p-8 text-center cursor-pointer transition-colors group ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
-        {preview ? (
-          <div className="flex flex-col items-center gap-3">
-            <p className="text-xs text-gray-500">Yeni şəkil seçildi. Yükləmək üçün aşağıdakı düyməni basın.</p>
+        <>
+          <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
+            <ImageIcon className="w-6 h-6 text-[#76c122]" />
           </div>
-        ) : (
-          <>
-            <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-green-100 transition-colors">
-              <ImageIcon className="w-6 h-6 text-[#76c122]" />
-            </div>
-            <p className="text-sm font-semibold text-gray-700 mb-1">Yeni hero şəklini buraya sürükləyin</p>
-            <p className="text-xs text-gray-400">və ya seçmək üçün klikləyin</p>
-            <p className="text-xs text-gray-400 mt-2">PNG, JPG, SVG, WebP — maks. 5MB</p>
-          </>
-        )}
+          <p className="text-sm font-semibold text-gray-700 mb-1">Yeni hero şəklini seçin</p>
+          <p className="text-xs text-gray-400">Şəkil seçildiyi an avtomatik yüklənəcəkdir</p>
+          <p className="text-xs text-gray-400 mt-1">PNG, JPG, SVG, WebP — maks. 5MB</p>
+        </>
         <input
           ref={fileRef}
           type="file"
           accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp"
           className="hidden"
+          disabled={uploading}
           onChange={e => {
             const f = e.target.files?.[0];
             if (f) handleFile(f);
@@ -327,25 +323,6 @@ function HeroImageUploadPanel({
           {message.text}
         </div>
       )}
-
-      <Button
-        onClick={handleUpload}
-        disabled={uploading || !preview}
-        className="w-full py-2.5 rounded-xl font-semibold text-white disabled:opacity-50"
-        style={{ background: 'linear-gradient(135deg, #76c122, #5fa010)' }}
-      >
-        {uploading ? (
-          <span className="flex items-center gap-2">
-            <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            Yüklənir...
-          </span>
-        ) : (
-          <span className="flex items-center gap-2">
-            <Upload className="w-4 h-4" />
-            Şəkli Yüklə
-          </span>
-        )}
-      </Button>
     </div>
   );
 }
