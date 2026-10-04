@@ -137,9 +137,17 @@ export function SiteContentProvider({
         });
       if (error) {
         console.error('Failed to save popup data to Supabase:', error.message);
+        if (error.message?.toLowerCase().includes('failed to fetch') || error.message?.toLowerCase().includes('fetch failed')) {
+          throw new Error('Supabase layihəsi dayandırılıb (Paused). Zəhmət olmasa supabase.com panelindən bərpa (Restore) edin.');
+        }
+        throw new Error(`Məlumat bazaya yazıla bilmədi: ${error.message}`);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to save popup data to Supabase:', err);
+      if (err.message?.toLowerCase().includes('failed to fetch') || err.message?.toLowerCase().includes('fetch failed')) {
+        throw new Error('Supabase layihəsi dayandırılıb (Paused). Zəhmət olmasa supabase.com panelindən bərpa (Restore) edin.');
+      }
+      throw err;
     }
   }, []);
 
