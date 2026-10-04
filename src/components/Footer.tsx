@@ -94,7 +94,7 @@ export default function Footer() {
           {/* ── Xidmətlər + Əlaqə row: side-by-side on mobile ── */}
           <div className="grid grid-cols-2 gap-4 md:contents">
             {/* ── 2. Xidmətlər links ────────────────── */}
-            <div>
+            <div className="order-2 md:order-none">
               <h4 className="text-white font-semibold mb-5 text-sm uppercase tracking-wider">
                 Xidmətlər
               </h4>
@@ -114,7 +114,7 @@ export default function Footer() {
             </div>
 
             {/* ── 3. Contact (Əlaqə) ────────────────── */}
-            <div>
+            <div className="order-1 md:order-none">
               <h4 className="text-white font-semibold mb-5 text-sm uppercase tracking-wider">
                 Əlaqə
               </h4>
