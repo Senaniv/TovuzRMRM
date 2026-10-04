@@ -66,35 +66,52 @@ export default function DoctorsCarousel() {
                         className="w-full flex flex-col items-center text-center group cursor-pointer select-none"
                       >
                         {/* Capsule/Oval shape for Doctor Image */}
-                        <div className="relative w-full aspect-[3/4] max-w-[220px] rounded-[150px] overflow-hidden bg-gradient-to-b from-[#e8f5d4]/45 to-[#76c122]/10 mb-6 flex justify-center items-end shadow-inner transition-all duration-350 ease-out group-hover:scale-105 group-hover:shadow-lg">
+                        <div className="relative w-full aspect-[3/4] max-w-[220px] rounded-[150px] overflow-hidden bg-gradient-to-b from-[#e8f5d4]/45 to-[#76c122]/10 mb-6 flex justify-center items-end shadow-inner transition-all duration-300 ease-out group-hover:shadow-xl group-hover:-translate-y-1.5">
                           <Image
                             src={doctor.image}
                             alt={doctor.name}
                             fill
-                            className={`object-cover scale-[1.03] transition-all duration-300 ${isSelected ? 'scale-110 filter blur-xs' : 'group-hover:scale-105'}`}
+                            className="object-cover object-top transition-transform duration-300"
                           />
 
-                          {/* Bio Overlay on Hover / Click with backdrop blur */}
+                          {/* Bio Overlay on Hover / Click: positioned at bottom with smooth gradient blur */}
                           <div
-                            className={`absolute inset-0 z-10 bg-gray-950/75 backdrop-blur-md rounded-[150px] flex flex-col items-center justify-center px-4 py-6 text-center transition-all duration-300 ${
+                            className={`absolute inset-0 z-10 rounded-[150px] flex flex-col justify-end px-4 pb-6 pt-16 text-center transition-all duration-300 ${
                               isSelected
                                 ? 'opacity-100 pointer-events-auto'
                                 : 'opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto'
                             }`}
+                            style={{
+                              background: 'linear-gradient(to top, rgba(5, 12, 4, 0.94) 0%, rgba(5, 12, 4, 0.82) 48%, rgba(5, 12, 4, 0.35) 68%, rgba(5, 12, 4, 0) 100%)',
+                            }}
                           >
-                            <span className="text-[11px] font-bold text-[#76c122] uppercase tracking-wider mb-2">
-                              Həkim Haqqında
-                            </span>
-                            <div className="max-h-[145px] overflow-y-auto px-1 scrollbar-thin">
-                              <p className="text-xs text-white/95 leading-relaxed font-medium">
-                                {doctor.bio || 'Həkim haqqında ətraflı məlumat tezliklə əlavə olunacaq.'}
-                              </p>
-                            </div>
-                            {doctor.experience && (
-                              <span className="mt-2.5 text-[10px] font-semibold text-gray-300 bg-white/10 px-2.5 py-1 rounded-full border border-white/10">
-                                {doctor.experience} təcrübə
+                            {/* Backdrop blur masked to the bottom portion so face stays clear */}
+                            <div
+                              className="absolute inset-0 pointer-events-none -z-10 rounded-[150px]"
+                              style={{
+                                backdropFilter: 'blur(6px)',
+                                WebkitBackdropFilter: 'blur(6px)',
+                                maskImage: 'linear-gradient(to top, black 0%, black 50%, transparent 80%)',
+                                WebkitMaskImage: 'linear-gradient(to top, black 0%, black 50%, transparent 80%)',
+                              }}
+                            />
+
+                            {/* Bio content in bottom half */}
+                            <div className="relative z-10 flex flex-col items-center">
+                              <span className="text-[10px] font-bold text-[#76c122] uppercase tracking-wider mb-1 drop-shadow-sm">
+                                Həkim Haqqında
                               </span>
-                            )}
+                              <div className="max-h-[110px] overflow-y-auto px-1 scrollbar-none">
+                                <p className="text-[11px] leading-relaxed text-white font-medium drop-shadow-sm">
+                                  {doctor.bio || 'Həkim haqqında ətraflı məlumat tezliklə əlavə olunacaq.'}
+                                </p>
+                              </div>
+                              {doctor.experience && (
+                                <span className="mt-2 text-[9px] font-semibold text-gray-200 bg-white/15 px-2.5 py-0.5 rounded-full border border-white/20">
+                                  {doctor.experience} təcrübə
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
 
