@@ -14,6 +14,8 @@ export default function DoctorsCarousel() {
   const { content, doctors } = useSiteContent();
   const d = content.doctors;
 
+  const [activeDoctorId, setActiveDoctorId] = useState<string | null>(null);
+
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: 'start' },
     [Autoplay({ delay: 3500, stopOnInteraction: false })]
@@ -52,39 +54,68 @@ export default function DoctorsCarousel() {
               onMouseLeave={() => emblaApi?.plugins().autoplay?.play()}
             >
               <div className="flex -mx-3 lg:-mx-4">
-                {doctors.map((doctor) => (
-                  <div
-                    key={doctor.id}
-                    className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.3333%] min-w-0 px-3 lg:px-4 flex flex-col items-center flex-shrink-0"
-                  >
-                    <div className="w-full flex flex-col items-center text-center group">
-                      {/* Capsule/Oval shape for Doctor Image */}
-                      <div className="relative w-full aspect-[3/4] max-w-[220px] rounded-[150px] overflow-hidden bg-gradient-to-b from-[#e8f5d4]/45 to-[#76c122]/10 mb-6 flex justify-center items-end shadow-inner transition-all duration-350 ease-out group-hover:scale-105 group-hover:shadow-lg">
-                        <Image
-                          src={doctor.image}
-                          alt={doctor.name}
-                          fill
-                          className="object-cover scale-[1.03] transition-transform duration-300 group-hover:scale-105"
-                        />
+                {doctors.map((doctor) => {
+                  const isSelected = activeDoctorId === doctor.id;
+                  return (
+                    <div
+                      key={doctor.id}
+                      className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.3333%] min-w-0 px-3 lg:px-4 flex flex-col items-center flex-shrink-0"
+                    >
+                      <div
+                        onClick={() => setActiveDoctorId(prev => prev === doctor.id ? null : doctor.id)}
+                        className="w-full flex flex-col items-center text-center group cursor-pointer select-none"
+                      >
+                        {/* Capsule/Oval shape for Doctor Image */}
+                        <div className="relative w-full aspect-[3/4] max-w-[220px] rounded-[150px] overflow-hidden bg-gradient-to-b from-[#e8f5d4]/45 to-[#76c122]/10 mb-6 flex justify-center items-end shadow-inner transition-all duration-350 ease-out group-hover:scale-105 group-hover:shadow-lg">
+                          <Image
+                            src={doctor.image}
+                            alt={doctor.name}
+                            fill
+                            className={`object-cover scale-[1.03] transition-all duration-300 ${isSelected ? 'scale-110 filter blur-xs' : 'group-hover:scale-105'}`}
+                          />
+
+                          {/* Bio Overlay on Hover / Click with backdrop blur */}
+                          <div
+                            className={`absolute inset-0 z-10 bg-gray-950/75 backdrop-blur-md rounded-[150px] flex flex-col items-center justify-center px-4 py-6 text-center transition-all duration-300 ${
+                              isSelected
+                                ? 'opacity-100 pointer-events-auto'
+                                : 'opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto'
+                            }`}
+                          >
+                            <span className="text-[11px] font-bold text-[#76c122] uppercase tracking-wider mb-2">
+                              Həkim Haqqında
+                            </span>
+                            <div className="max-h-[145px] overflow-y-auto px-1 scrollbar-thin">
+                              <p className="text-xs text-white/95 leading-relaxed font-medium">
+                                {doctor.bio || 'Həkim haqqında ətraflı məlumat tezliklə əlavə olunacaq.'}
+                              </p>
+                            </div>
+                            {doctor.experience && (
+                              <span className="mt-2.5 text-[10px] font-semibold text-gray-300 bg-white/10 px-2.5 py-1 rounded-full border border-white/10">
+                                {doctor.experience} təcrübə
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Name */}
+                        <h3 className="text-lg font-black text-[#3f7215] mb-0.5 tracking-tight uppercase group-hover:text-[#76c122] transition-colors" style={{ fontFamily: 'Raleway, sans-serif' }}>
+                          {doctor.name}
+                        </h3>
+
+                        {/* Title */}
+                        <p className="text-sm font-bold text-gray-800 mb-3">
+                          {doctor.title}
+                        </p>
+
+                        {/* Specialty */}
+                        <p className="text-xs text-gray-500 leading-normal max-w-[220px]">
+                          <span className="font-bold text-gray-700">İxtisas:</span> {doctor.specialty}
+                        </p>
                       </div>
-
-                      {/* Name */}
-                      <h3 className="text-lg font-black text-[#3f7215] mb-0.5 tracking-tight uppercase group-hover:text-[#76c122] transition-colors" style={{ fontFamily: 'Raleway, sans-serif' }}>
-                        {doctor.name}
-                      </h3>
-
-                      {/* Title */}
-                      <p className="text-sm font-bold text-gray-800 mb-3">
-                        {doctor.title}
-                      </p>
-
-                      {/* Specialty */}
-                      <p className="text-xs text-gray-500 leading-normal max-w-[220px]">
-                        <span className="font-bold text-gray-700">İxtisas:</span> {doctor.specialty}
-                      </p>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
