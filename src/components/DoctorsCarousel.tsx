@@ -74,7 +74,7 @@ export default function DoctorsCarousel() {
                             className="object-cover object-top transition-transform duration-300"
                           />
 
-                          {/* Bio Overlay on Hover / Click: positioned at bottom with smooth gradient blur */}
+                          {/* Bio Overlay on Hover / Click: positioned at bottom with brand green gradient blur */}
                           <div
                             className={`absolute inset-0 z-10 rounded-[150px] flex flex-col justify-end px-4 pb-6 pt-16 text-center transition-all duration-300 ${
                               isSelected
@@ -82,15 +82,15 @@ export default function DoctorsCarousel() {
                                 : 'opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto'
                             }`}
                             style={{
-                              background: 'linear-gradient(to top, rgba(5, 12, 4, 0.94) 0%, rgba(5, 12, 4, 0.82) 48%, rgba(5, 12, 4, 0.35) 68%, rgba(5, 12, 4, 0) 100%)',
+                              background: 'linear-gradient(to top, rgba(20, 48, 8, 0.96) 0%, rgba(33, 72, 14, 0.88) 46%, rgba(63, 114, 21, 0.42) 68%, rgba(118, 193, 34, 0) 100%)',
                             }}
                           >
                             {/* Backdrop blur masked to the bottom portion so face stays clear */}
                             <div
                               className="absolute inset-0 pointer-events-none -z-10 rounded-[150px]"
                               style={{
-                                backdropFilter: 'blur(6px)',
-                                WebkitBackdropFilter: 'blur(6px)',
+                                backdropFilter: 'blur(8px)',
+                                WebkitBackdropFilter: 'blur(8px)',
                                 maskImage: 'linear-gradient(to top, black 0%, black 50%, transparent 80%)',
                                 WebkitMaskImage: 'linear-gradient(to top, black 0%, black 50%, transparent 80%)',
                               }}
@@ -98,7 +98,7 @@ export default function DoctorsCarousel() {
 
                             {/* Bio content in bottom half */}
                             <div className="relative z-10 flex flex-col items-center">
-                              <span className="text-[10px] font-bold text-[#76c122] uppercase tracking-wider mb-1 drop-shadow-sm">
+                              <span className="text-[10px] font-black text-[#a6f04c] uppercase tracking-wider mb-1 drop-shadow-sm">
                                 Həkim Haqqında
                               </span>
                               <div className="max-h-[110px] overflow-y-auto px-1 scrollbar-none">
@@ -107,7 +107,7 @@ export default function DoctorsCarousel() {
                                 </p>
                               </div>
                               {doctor.experience && (
-                                <span className="mt-2 text-[9px] font-semibold text-gray-200 bg-white/15 px-2.5 py-0.5 rounded-full border border-white/20">
+                                <span className="mt-2 text-[9px] font-semibold text-white bg-[#76c122]/30 px-2.5 py-0.5 rounded-full border border-[#76c122]/40 backdrop-blur-xs shadow-sm">
                                   {doctor.experience} təcrübə
                                 </span>
                               )}
